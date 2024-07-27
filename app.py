@@ -1,18 +1,26 @@
 import streamlit as st
 
+
+
 st.set_page_config(page_title="Tinder", page_icon=":couple:", layout="centered", initial_sidebar_state="auto")
+st.write("# Projet Tinder")
 
-dashboard = st.Page("pages/page1.py", title="Dashboard", icon=None, default=True)
-bugs = st.Page("pages/page2.py", title="Bug reports", icon=None)
-alerts = st.Page("pages/page1.py", title="System alerts", icon=None)
+st.logo("icons/tinder-logo.png")
+preambule = st.Page("pages/preambule.py", title="Projet", icon=":material/engineering:", default=True)
+donnees = st.Page("pages/donnees.py", title="Forme des données fournies", icon=":material/database:")
+physique = st.Page("pages/physique.py", title="Physique", icon=":material/directions_run:")
 
-search = st.Page("pages/page1.py", title="Search", icon="🔥")
-history = st.Page("pages/page2.py", title="History", icon=":material/star:")
+origines = st.Page("pages/origines.py", title="Origine", icon=":material/diversity_3:")
+age = st.Page("pages/age.py", title="Age", icon=":material/person:")
+social = st.Page("pages/social.py", title="Profil social", icon=":material/language:")
 
 pages = {
-    "🏠 Your account": [search, history,],
-    "Resources": [],
+    "🏠 Préambule": [preambule,],
+    "📊 Données fournies": [donnees,],
+    "🌍 Profil des participants": [physique, origines, age, social],
+    "📈 Attentes des participants": [],
 }
 
 pg = st.navigation(pages)
 pg.run()
+
