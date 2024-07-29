@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
 from function import load_data
+from function import df
 
-# df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
-df = load_data("Speed_Dating_Data.csv")
-
-st.dataframe(df.head())
+st.dataframe(df.head(), hide_index=True)
 infor = df.info()
 st.dataframe(infor)
 

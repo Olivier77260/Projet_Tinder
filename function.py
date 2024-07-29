@@ -5,3 +5,5 @@ import pandas as pd
 def load_data(file):
     df = pd.read_csv(file, encoding="cp1252")
     return df
+
+df = load_data("Speed_Dating_Data.csv")

@@ -1,7 +1,7 @@
 import streamlit as st
 
-def main():
-    st.set_page_config(page_title="Tinder", page_icon=":couple:", layout="centered", initial_sidebar_state="auto")
+def main():    
+    st.set_page_config(page_title="Tinder", page_icon=":couple:", layout="wide", initial_sidebar_state="auto")
     st.write("# Projet Tinder")
 
     st.logo("icons/tinder-logo.png")
@@ -19,7 +19,7 @@ def main():
         "🌍 Profil des participants": [physique, origines, age, social],
         "📈 Attentes des participants": [],
     }
-
+    
     pg = st.navigation(pages)
     pg.run()
 

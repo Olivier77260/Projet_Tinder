@@ -1,8 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
+from function import df
 
 gender = df.gender.value_counts()
 gender.rename(index={0:'Female', 1:'Male'}, inplace=True)
