@@ -1,8 +1,14 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from function import load_data
 
-df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
+# @st.cache_data
+# def load_data(file):
+#     df = pd.read_csv(file, encoding="cp1252")
+#     return df
+
+df = load_data("Speed_Dating_Data.csv")
 
 age_gender = df.groupby('age')['gender'].value_counts().reset_index()
 age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
@@ -10,4 +16,4 @@ age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 e
 
 # st.bar_chart(age_gender, x="age", y="count", color="gender", horizontal=False)
 
-st.bar_chart(age_gender, x="age", y="count", color="gender", stack=False, width=1000, height=700, use_container_width=False)
+st.bar_chart(age_gender, x="age", y="count", color="gender", stack=False, use_container_width=True)
