@@ -1,5 +1,4 @@
 import streamlit as st
-import seaborn as sns
 import matplotlib.pyplot as plt
 from function import df
 
@@ -33,6 +32,6 @@ race.index = race.index.map(Races)
 
 explode = (0.1, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(race, explode=explode, labels=race.index, autopct='%1.1f%%', shadow=True, startangle=90)
+ax1.pie(race, explode=explode, labels=race.index, autopct="%0.0f%%", shadow=True, startangle=90)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)

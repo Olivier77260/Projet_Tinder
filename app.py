@@ -23,7 +23,7 @@ def main():
         "🛠️ Analyse des données": [analyse,],
         "🌍 Profil des participants": [physique, social,],
         "🌈 Habitudes de vie des participants": [habitudes,],
-        "⏱️ ♀️Attentes des participants": [attentes,],
+        "⏱️ Attentes des participants": [attentes,],
     }
     
     pg = st.navigation(pages)
