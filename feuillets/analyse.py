@@ -32,7 +32,7 @@ st.write(name_colonnes)
 
 st.subheader("Beaucoup de données sont manquantes et demanderont une attention particulière.")
 in_null = df.isnull().sum()
-st.dataframe(in_null)
+st.dataframe(in_null, width=160)
 
 st.subheader("Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave, ce qui posera un problème lors de calculs.")
 st.subheader("Beaucoup de données catégorielles ont été converties numériquement.")

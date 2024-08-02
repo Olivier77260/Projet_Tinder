@@ -126,3 +126,33 @@ fig1, ax1 = plt.subplots()
 ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", radius=0.5)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
+
+st.divider()
+
+
+# import pandas as pd,geopy,certifi,ssl
+# from geopy.geocoders import Nominatim
+
+# ctx = ssl.create_default_context(cafile=certifi.where())
+# geopy.geocoders.options.default_ssl_context = ctx
+
+# geolocator = Nominatim(user_agent="geocodage")
+
+# adresse = df['from'].dropna()
+# adresse_list = []
+# longitude_list = []
+# latitude_list = []
+# for x in adresse:
+#     try: 
+#         longitude = geolocator.geocode(x).longitude
+#         latitude = geolocator.geocode(x).latitude
+#         adresse_list.append(x)
+#         longitude_list.append(longitude)
+#         latitude_list.append(latitude)
+#     except:
+#         print('Adresse non localisée : '+x)
+# output = pd.DataFrame({'adresse':adresse_list,'longitude':longitude_list,'latitude':latitude_list})
+
+
+
+# st.map(output, latitude='latitude', longitude='longitude')
