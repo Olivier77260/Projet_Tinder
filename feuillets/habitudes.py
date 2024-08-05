@@ -28,7 +28,8 @@ def Frequence2(x):
         size = "7_Almost never"
     return size
 sortie_rdv['index'] = sortie_rdv.index.map(Frequence2)
-st.bar_chart(sortie_rdv, x="index", y=['Sorties', 'Rdv'], x_label='', stack='normalize', use_container_width=True, color=["#dec1ff", "#00d43c"], horizontal=True)
+st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
+st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
 
 objectifs = df.goal.value_counts()
 def Objects(x):
