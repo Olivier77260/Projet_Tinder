@@ -111,7 +111,7 @@ labels = carriere.index
 
 explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, colors=colors, pctdistance=0.8)
+ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, colors=colors, pctdistance=0.8)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
 st.metric(value=df.career_c.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa profession.")
@@ -126,9 +126,9 @@ sports_nul = df.movies.isnull().sum()
 yoga_nul = df.dining.isnull().sum()
 explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", radius=0.2, pctdistance=0.8)
+ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", pctdistance=0.8)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-st.pyplot(fig1)
+st.pyplot(fig1, use_container_width=False)
 
 st.divider()
 st.metric(value=sports_nul, label="Nombre de participant n'ayant pas renseigné ses activités.")
