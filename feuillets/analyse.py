@@ -1,11 +1,15 @@
 import streamlit as st
+from function import dfTrue, dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
 
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 st.write(st.session_state.del_from)
-from function import df
+if st.session_state.del_from:
+    df = dfTrue
+else:
+    df = dfFalse
 
 col1, col2 = st.columns(2, gap="medium")
 with col1:

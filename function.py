@@ -1,18 +1,16 @@
 import streamlit as st
 import pandas as pd
 
-if 'del_from' not in st.session_state:
-    st.session_state.del_from = False
+
 
 @st.cache_data
-def load_data(del_from):
+def load_data_True():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
-    if del_from:
-        df = df.dropna(subset=['from', 'race'])
+    df = df.dropna(subset=['from', 'race'])
+    return df
+def load_data_False():
+    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
     return df
 
-if st.session_state.del_from:
-    load_data.clear(False)
-else:
-    load_data.clear(True)
-df = load_data(st.session_state.del_from)
+dfTrue = load_data_True()
+dfFalse = load_data_False()

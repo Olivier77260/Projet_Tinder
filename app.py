@@ -3,6 +3,8 @@ import streamlit as st
 def main():    
     st.set_page_config(page_title="Tinder", page_icon="👩‍❤️‍👨", layout="wide", initial_sidebar_state="auto")
     st.logo("icons/tinder-logo.png")
+    if 'del_from' not in st.session_state:
+        st.session_state.del_from = False
 
     preambule = st.Page("feuillets/preambule.py", title="Projet", icon=":material/engineering:", default=True)
 
