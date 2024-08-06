@@ -61,46 +61,9 @@ with col2:
     st.pyplot(fig2)
 
 st.divider()
-
-male0 = df[(df.gender == 1) & (df.match == 0) & (df.dec_o == 0)]
-malepf = male0.loc[:, 'pf_o_att' : 'pf_o_sha'].sum().sort_values()
-def quality_pf_o(x):
-    if x == 'pf_o_att':
-        size = "Attractive"
-    elif x == 'pf_o_sin':
-        size = "Sincere"
-    elif x == 'pf_o_int':
-        size = "Intelligent"
-    elif x == 'pf_o_fun':
-        size = "Fun"
-    elif x == 'pf_o_amb':
-        size = "Ambitious"
-    else:
-        size = "Has shared interests/hobbies"
-    return size
-malepf.index = malepf.index.map(quality_pf_o)
-colors = sns.color_palette("bright")
-explode = (0, 0, 0, 0, 0, 0.1)  # only "explode" the 2nd slice (i.e. 'Hogs')
-fig3, ax3 = plt.subplots()
-ax3.pie(malepf, explode=explode, labels=malepf.index, colors=colors, autopct='%0.0f%%', shadow=True, startangle=90)
-ax3.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-
-female0 = df[(df.gender == 0) & (df.match == 0) & (df.dec_o == 0)]
-femalepf = female0.loc[:, 'pf_o_att' : 'pf_o_sha'].sum().sort_values()
-femalepf.index = femalepf.index.map(quality_pf_o)
-colors = sns.color_palette("bright")
-explode = (0, 0, 0, 0, 0, 0.1)  # only "explode" the 2nd slice (i.e. 'Hogs')
-fig4, ax4 = plt.subplots()
-ax4.pie(femalepf, explode=explode, labels=femalepf.index, colors=colors, autopct='%0.0f%%', shadow=True, startangle=90)
-ax4.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-
-col3, col4 = st.columns(2, gap='medium')
-with col3:
-    st.subheader("Préférences déclarées au premier rendez-vous envers les hommes.")
-    st.pyplot(fig3)
-
-with col4:
-    st.subheader("Préférences déclarées au premier rendez-vous envers les femmes.")
-    st.pyplot(fig4)
+st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur avec telle application""")
+happy_gender = df.groupby('exphappy')['gender'].value_counts().reset_index()
+happy_gender['gender'] = happy_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+# sns.catplot(x="exphappy", y="count", kind="bar", hue="gender", data=happy_gender, aspect=2.5)
+colors = "gender"
+st.bar_chart(happy_gender, x="exphappy", y="count", color=colors, stack=False, use_container_width=True)

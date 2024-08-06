@@ -55,9 +55,10 @@ labels = count.index
 
 explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(count, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180)
+ax1.pie(count, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
+st.metric(value=df.field_cd.isnull().sum(), label="Nombre de participant n'ayant pas renseigné son domaine d'étude.")
 
 st.divider()
 st.subheader("Une vingtaine de professions sont representées, majoritairement des métiers dits intellectuels.")
@@ -110,49 +111,24 @@ labels = carriere.index
 
 explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, colors=colors)
+ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, colors=colors, pctdistance=0.8)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
+st.metric(value=df.career_c.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa profession.")
 
 st.divider()
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 st.subheader("Les hobbies, source de rencontres, sont trés diversifiés.")
-list_activites = df.loc[:, 'sports' : 'yoga']
-list_activites = list_activites.sum().sort_values()
-labels = list_activites.index
 
+list_activites = df.loc[:, 'sports' : 'yoga'].sum().sort_values()
+labels = list_activites.index
+sports_nul = df.movies.isnull().sum()
+yoga_nul = df.dining.isnull().sum()
 explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", radius=0.5)
+ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", radius=0.2, pctdistance=0.8)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
 
 st.divider()
-
-
-# import pandas as pd,geopy,certifi,ssl
-# from geopy.geocoders import Nominatim
-
-# ctx = ssl.create_default_context(cafile=certifi.where())
-# geopy.geocoders.options.default_ssl_context = ctx
-
-# geolocator = Nominatim(user_agent="geocodage")
-
-# adresse = df['from'].dropna()
-# adresse_list = []
-# longitude_list = []
-# latitude_list = []
-# for x in adresse:
-#     try: 
-#         longitude = geolocator.geocode(x).longitude
-#         latitude = geolocator.geocode(x).latitude
-#         adresse_list.append(x)
-#         longitude_list.append(longitude)
-#         latitude_list.append(latitude)
-#     except:
-#         print('Adresse non localisée : '+x)
-# output = pd.DataFrame({'adresse':adresse_list,'longitude':longitude_list,'latitude':latitude_list})
-
-
-
-# st.map(output, latitude='latitude', longitude='longitude')
+st.metric(value=sports_nul, label="Nombre de participant n'ayant pas renseigné ses activités.")

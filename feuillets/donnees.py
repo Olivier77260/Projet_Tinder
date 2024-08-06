@@ -22,3 +22,4 @@ if ss.pdf:
 if ss.pdf_ref:
     binary_data = ss.pdf_ref.getvalue()
     pdf_viewer(input=binary_data, width=1000)
+

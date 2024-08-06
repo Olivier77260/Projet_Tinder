@@ -33,47 +33,30 @@ col2, col3 = st.columns(2, gap='large')
 with col2:
     st.subheader("Fréquence des sorties.")
     st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='Fréquence des sorties', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
+    st.metric(value=df.go_out.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa fréquence de sortie.")
 
 with col3:
     st.subheader("Fréquence des rendez-vous.")
     st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='Fréquence des rendes-vous', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
+    st.metric(value=df.date.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa fréquence de rendez-vous.")
 
-ethnic = df['imprace'].value_counts().reset_index(name='somme')
+ethnic = df['imprace'].value_counts().reset_index(name='race')
 ethnic['iid'] = ethnic['imprace']
-religious = df['imprelig'].value_counts().reset_index(name='total')
+religious = df['imprelig'].value_counts().reset_index(name='religion')
 religious['iid'] = religious['imprelig']
 dataset = religious.merge(ethnic, on='iid')
 dataset = dataset.sort_values('iid')
-plt.plot(
-    'iid', 'total', data=dataset,
-    marker='o', # marker type
-    markerfacecolor='blue', # color of marker
-    markersize=4, # size of marker
-    color='blue', # color of line
-    linewidth=2, # change width of line
-    label="religion" # label for legend
-)
 
-plt.plot(
-    'iid', 'somme', data=dataset,
-    marker='+', # no marker
-    color='green', # color of line
-    linewidth=2, # change width of line
-    linestyle='dashed', # change type of line
-    label="race" # label for legend
-)
 
-# show legend
-plt.legend()
+st.divider()
+col4, col5 = st.columns(2, gap='large')
+with col4:
+    st.subheader("Importance de la race dans la relation.")
+    st.bar_chart(dataset, x="iid", y="race", stack=False, use_container_width=True)
+    st.metric(value=df.imprace.isnull().sum(), label="Nombre de participant n'ayant pas renseigné l'importance de la race.")
+    
 
-# fig, ax = plt.subplots()
-# ax.scatter(x, y)
-# # other plotting actions...
-st.pyplot()
-
-st.line_chart(
-    dataset,
-    x="iid",
-    y=["total", "somme"],
-    color=["#FF0000", "#0000FF"],  # Optional
-)
+with col5:
+    st.subheader("Importance de la religion.")
+    st.bar_chart(dataset, x="iid", y="religion", stack=False, use_container_width=True)
+    st.metric(value=df.imprelig.isnull().sum(), label="Nombre de participant n'ayant pas renseigné l'importance de la religion.")

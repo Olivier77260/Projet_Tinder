@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 from function import df
+import seaborn as sns
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)
 st.subheader("""Si on regarde par tranche d’âge, ce sont les femmes qui utilisent le plus l'application, """
@@ -29,9 +30,11 @@ def Races(x):
         size = "Other"
     return size
 race.index = race.index.map(Races)
-
+color = sns.color_palette("bright")
 explode = (0.1, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(race, explode=explode, labels=race.index, autopct="%0.0f%%", shadow=True, startangle=90)
+ax1.pie(race, explode=explode, labels=race.index, colors=color, autopct="%0.0f%%", shadow=True, startangle=90)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
+
+st.metric(value=df['race'].isnull().sum(), label="Nombre de participant n'ayant pas renseigné son origine.")
