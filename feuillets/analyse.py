@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 st.markdown("#### <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
 
 st.checkbox("Suppression des valeurs manquantes", key="del_from")

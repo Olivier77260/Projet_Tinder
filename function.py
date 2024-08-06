@@ -10,5 +10,7 @@ def load_data(del_from):
     if del_from:
         df = df.dropna(subset=['from', 'race'])
     return df
+if st.session_state.del_from:
+    load_data.clear()
 
 df = load_data(st.session_state.del_from)
