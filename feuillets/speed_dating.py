@@ -83,7 +83,7 @@ ax6.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
 col3, col4 = st.columns(2, gap='medium')
 with col3:
-    st.subheader("Préférences déclarées au premier rendez-vous envers les hommes.")
+    st.subheader("Préférences déclarées au speed dating envers les hommes.")
     st.pyplot(fig3)
     st.metric(value=male0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 

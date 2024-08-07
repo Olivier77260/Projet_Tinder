@@ -9,7 +9,10 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-objectifs = df.goal.value_counts()
+objectifs = df.groupby('goal')['gender'].value_counts().reset_index()
+objectifs['gender'] = objectifs['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+objectifs = objectifs[objectifs.gender == 'Male'].set_index('goal')
+objectifs = objectifs.drop('gender', axis=1)
 def Objects(x):
     if x == 1.0:
         size = "Seemed like a fun night out"
@@ -25,10 +28,10 @@ def Objects(x):
         size = "Other"
     return size
 objectifs.index = objectifs.index.map(Objects)
-labels = objectifs.index
+objectifs = objectifs.squeeze()
 explode = (0.1, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
-ax1.pie(objectifs, explode=explode, labels=labels, autopct='%0.0f%%', shadow=True, startangle=90)
+ax1.pie(objectifs, explode=explode, labels=objectifs.index, autopct='%0.0f%%', shadow=True, startangle=90)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
 list_search = df.loc[:, 'attr1_1' : 'shar1_1'].sum().sort_values()
@@ -57,7 +60,7 @@ ax2.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.divider()
 col1, col2 = st.columns(2, gap='medium')
 with col1:
-    st.subheader("Attentes des participants.")
+    st.subheader("Attentes des participants hommes.")
     st.pyplot(fig1)
     st.metric(value=df['goal'].isnull().sum(), label="Nombre de valeurs manquantes.")
     st.checkbox("Suppression des valeurs manquantes", key="del_from")

@@ -10,7 +10,7 @@ else:
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
-adresses = pd.read_csv('adresses2.csv', sep=';')
+adresses = pd.read_csv('adresses.csv', sep=';')
 st.subheader("Carte du monde d'où viennet les participants.")
 st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
 st.subheader("Le domaine des études reste conforme aux professions exercées.")
