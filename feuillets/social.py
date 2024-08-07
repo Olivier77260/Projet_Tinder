@@ -1,10 +1,18 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
-from function import df
+import pandas as pd
+
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
-
+st.checkbox("Suppression des valeurs manquantes", key="del_from")
+adresses = pd.read_csv('adresses2.csv', sep=';')
+st.subheader("Carte du monde d'où viennet les participants.")
+st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
 st.subheader("Le domaine des études reste conforme aux professions exercées.")
 count = df.field_cd.value_counts().sort_values(ascending=False)
 other = count[count<count.quantile(.25)].sum()
@@ -117,7 +125,6 @@ st.pyplot(fig1)
 st.metric(value=df.career_c.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa profession.")
 
 st.divider()
-st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 st.subheader("Les hobbies, source de rencontres, sont trés diversifiés.")
 
 list_activites = df.loc[:, 'sports' : 'yoga'].sum().sort_values()
@@ -130,5 +137,6 @@ ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", pctdi
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1, use_container_width=False)
 
-st.divider()
 st.metric(value=sports_nul, label="Nombre de participant n'ayant pas renseigné ses activités.")
+
+st.divider()

@@ -1,9 +1,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from function import df
 import seaborn as sns
 
 st.markdown("#### <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
+
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
 
 objectifs = df.goal.value_counts()
 def Objects(x):
@@ -55,10 +59,13 @@ col1, col2 = st.columns(2, gap='medium')
 with col1:
     st.subheader("Attentes des participants.")
     st.pyplot(fig1)
+    st.metric(value=df['goal'].isnull().sum(), label="Nombre de valeurs manquantes.")
+    st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 with col2:
     st.subheader("Qualités recherchées dans le sexe opposé.")
     st.pyplot(fig2)
+    st.metric(value=df['intel1_1'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 st.divider()
 st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur avec telle application""")

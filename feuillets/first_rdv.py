@@ -1,7 +1,11 @@
 import streamlit as st
-from function import df
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**PREMIERS RENDEZ-VOUS**</ins></font>", unsafe_allow_html=True)
 
@@ -48,10 +52,12 @@ col3, col4 = st.columns(2, gap='medium')
 with col3:
     st.subheader("Préférences déclarées au premier rendez-vous envers les hommes.")
     st.pyplot(fig3)
+    st.metric(value=male0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 with col4:
     st.subheader("Préférences déclarées au premier rendez-vous envers les femmes.")
     st.pyplot(fig4)
+    st.metric(value=female0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 male_evaluation0 = male0.loc[:, 'attr_o' : 'shar_o'].sum().sort_values()
 def quality_o(x):
@@ -92,7 +98,9 @@ col5, col6 = st.columns(2, gap='medium')
 with col5:
     st.subheader("Suite au premier rendez-vous l'attractivité envers les hommes n'y est pas.")
     st.pyplot(fig5)
+    st.metric(value=male0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 with col6:
     st.subheader("Même constat pour les femmes.")
     st.pyplot(fig6)
+    st.metric(value=female0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")

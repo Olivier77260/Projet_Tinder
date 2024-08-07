@@ -1,10 +1,25 @@
 import streamlit as st
+import pandas as pd
 
-def main():    
+@st.cache_data
+def load_data_True():
+    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
+    df = df.dropna(subset=['from', 'race'])
+    df = df.drop(df[df.age==55].index)
+    return df
+def load_data_False():
+    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
+    return df
+
+def main():
     st.set_page_config(page_title="Tinder", page_icon="👩‍❤️‍👨", layout="wide", initial_sidebar_state="auto")
     st.logo("icons/tinder-logo.png")
+
     if 'del_from' not in st.session_state:
         st.session_state.del_from = False
+
+    st.session_state.dfTrue = load_data_True()
+    st.session_state.dfFalse = load_data_False() 
 
     preambule = st.Page("feuillets/preambule.py", title="Projet", icon=":material/engineering:", default=True)
 

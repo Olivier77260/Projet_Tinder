@@ -1,15 +1,13 @@
 import streamlit as st
-from function import dfTrue, dfFalse
+
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
 
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
-
-st.write(st.session_state.del_from)
-if st.session_state.del_from:
-    df = dfTrue
-else:
-    df = dfFalse
 
 col1, col2 = st.columns(2, gap="medium")
 with col1:
@@ -18,6 +16,7 @@ with col2:
     st.metric(label="Nombre de colonnes", value=df.shape[1])
 
 st.divider()
+
 st.write("Affichage des 5 premiéres lignes")
 
 st.dataframe(df.head(), hide_index=True)
@@ -41,7 +40,7 @@ st.subheader("Le nombre de participants à cette enquête est de " + nb_particip
 st.subheader("Le nom des colonnes n'étant pas très explicite, la documentation fournie nous sera d'une grande aide.")
 
 name_colonnes = df.columns
-st.write(name_colonnes)
+st.dataframe(name_colonnes, width=200)
 
 st.subheader("Beaucoup de données sont manquantes et demanderont une attention particulière.")
 in_null = df.isnull().sum()

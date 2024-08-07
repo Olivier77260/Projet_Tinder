@@ -1,6 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from function import dfTrue, dfFalse
 import seaborn as sns
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)
@@ -9,9 +8,9 @@ st.subheader("""Si on regarde par tranche d’âge, ce sont les femmes qui utili
              """âge moyen du premier enfant pour les pays en développement, pour reprendre par la suite.""")
 
 if st.session_state.del_from:
-    df = dfTrue
+    df = st.session_state.dfTrue
 else:
-    df = dfFalse
+    df = st.session_state.dfFalse
 
 age_gender = df.groupby('age')['gender'].value_counts().reset_index()
 age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
