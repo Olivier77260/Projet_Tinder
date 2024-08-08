@@ -1,17 +1,6 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
-if st.session_state.del_from:
-    df = st.session_state.dfTrue
-else:
-    df = st.session_state.dfFalse
-
-st.markdown("#### <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
-
-st.subheader("""Paradoxalement, ce n'est pas parce que l'on sort beaucoup que l'on fait plus de rencontre."""
-             """ D'où le succés de l'utilisation des applications dédiées. """)
 def Frequence2(x):
     if x == 1:
         size = "1_Several times a week"
@@ -28,12 +17,20 @@ def Frequence2(x):
     else:
         size = "7_Almost never"
     return size
+
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
+
+st.markdown("#### <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
+st.checkbox("Suppression des valeurs manquantes", key="del_from")
+
 sortie_rdv = pd.merge(df.go_out.value_counts(), df.date.value_counts(), right_index=True, left_index=True)
 sortie_rdv = sortie_rdv.rename(columns={'count_x': 'Sorties', 'count_y': 'Rdv'})
 sortie_rdv['index'] = sortie_rdv.index.map(Frequence2)
 
 st.divider()
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
 col2, col3 = st.columns(2, gap='large')
 with col2:
     st.subheader("Fréquence des sorties.")
@@ -51,7 +48,6 @@ religious = df['imprelig'].value_counts().reset_index(name='religion')
 religious['iid'] = religious['imprelig']
 dataset = religious.merge(ethnic, on='iid')
 dataset = dataset.sort_values('iid')
-
 
 st.divider()
 col4, col5 = st.columns(2, gap='large')

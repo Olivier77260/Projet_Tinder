@@ -37,3 +37,6 @@ st.dataframe(size)
 st.scatter_chart(df, x='date', y='go_out', use_container_width=True, color="#dec1ff")
 # st.bar_chart(df, x="go_out", y='date', stack='normalize', use_container_width=True, color="#dec1ff")
 st.line_chart(size, x='Rdv')
+
+age = df.age.value_counts()
+st.scatter_chart(age, x_label='age', color='#e80e0e', size=200)

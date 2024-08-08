@@ -1,4 +1,5 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -6,7 +7,6 @@ else:
     df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
-
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 col1, col2 = st.columns(2, gap="medium")
@@ -49,5 +49,24 @@ st.dataframe(in_null, width=160)
 st.subheader("Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave, ce qui posera un problème lors de calculs.")
 st.subheader("Beaucoup de données catégorielles ont été converties numériquement.")
 
-age = df.age.value_counts()
-st.scatter_chart(age, x_label='age', color='#e80e0e', size=200)
+
+
+age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
+
+age_gender_female = age_gender.loc[age_gender['gender'] == 0]
+fig1, ax1 = plt.subplots()
+ax1.set_ylabel('age')
+ax1.set_title('Outlier des ages féminins')
+ax1.boxplot(age_gender_female['age'], 0, 'gD', patch_artist=True, boxprops={'facecolor': 'bisque'}, widths=0.5)
+
+age_gender_male = age_gender.loc[age_gender['gender'] == 1]
+fig2, ax2 = plt.subplots()
+ax2.set_ylabel('age')
+ax2.set_title('Outlier des ages masculins')
+ax2.boxplot(age_gender_male['age'], 0, 'gD', patch_artist=True, boxprops={'facecolor': 'bisque'}, widths=0.5)
+
+col5, col6 = st.columns(2, gap="medium")
+with col5:
+    st.pyplot(fig1)
+with col6:
+    st.pyplot(fig2)

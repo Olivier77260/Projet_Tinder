@@ -3,21 +3,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-if st.session_state.del_from:
-    df = st.session_state.dfTrue
-else:
-    df = st.session_state.dfFalse
-
-st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
-adresses = pd.read_csv('adresses.csv', sep=';')
-st.subheader("Carte du monde d'où viennet les participants.")
-st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
-st.subheader("Le domaine des études reste conforme aux professions exercées.")
-count = df.field_cd.value_counts().sort_values(ascending=False)
-other = count[count<count.quantile(.25)].sum()
-count['others'] = other
-count = count[count>=count.quantile(.25)]
 def student(x):
     if x == 1.0:
         size = "Law"
@@ -56,24 +41,6 @@ def student(x):
     else:
         size = "Other"
     return size
-
-count.index = count.index.map(student)
-colors = sns.color_palette("bright")
-labels = count.index
-
-explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
-fig1, ax1 = plt.subplots()
-ax1.pie(count, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-st.pyplot(fig1)
-st.metric(value=df.field_cd.isnull().sum(), label="Nombre de participant n'ayant pas renseigné son domaine d'étude.")
-
-st.divider()
-st.subheader("Une vingtaine de professions sont representées, majoritairement des métiers dits intellectuels.")
-carriere = df.career_c.value_counts()
-other2 = carriere[carriere<carriere.quantile(.50)].sum()
-carriere['others'] = other2
-carriere = carriere[carriere>=carriere.quantile(.50)]
 
 def ProfilSociaux(x):
     if x == 1.0:
@@ -114,9 +81,43 @@ def ProfilSociaux(x):
         size = "Other"
     return size
 
+if st.session_state.del_from:
+    df = st.session_state.dfTrue
+else:
+    df = st.session_state.dfFalse
+
+st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
+st.checkbox("Suppression des valeurs manquantes", key="del_from")
+# carte du monde
+adresses = pd.read_csv('adresses.csv', sep=';')
+st.subheader("Carte du monde d'où viennet les participants.")
+st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
+
+# domaine d'étude
+st.subheader("Le domaine des études reste conforme aux professions exercées.")
+count = df.field_cd.value_counts().sort_values(ascending=False)
+other = count[count<count.quantile(.25)].sum()
+count['others'] = other
+count = count[count>=count.quantile(.25)]
+count.index = count.index.map(student)
+colors = sns.color_palette("bright")
+labels = count.index
+explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+fig1, ax1 = plt.subplots()
+ax1.pie(count, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
+ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+st.pyplot(fig1)
+st.metric(value=df.field_cd.isnull().sum(), label="Nombre de participant n'ayant pas renseigné son domaine d'étude.")
+
+# professions
+st.divider()
+st.subheader("Une vingtaine de professions sont representées, majoritairement des métiers dits intellectuels.")
+carriere = df.career_c.value_counts()
+other2 = carriere[carriere<carriere.quantile(.50)].sum()
+carriere['others'] = other2
+carriere = carriere[carriere>=carriere.quantile(.50)]
 carriere.index = carriere.index.map(ProfilSociaux)
 labels = carriere.index
-
 explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 fig1, ax1 = plt.subplots()
 ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, colors=colors, pctdistance=0.8)
@@ -124,9 +125,9 @@ ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1)
 st.metric(value=df.career_c.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa profession.")
 
+# Hobbies
 st.divider()
 st.subheader("Les hobbies, source de rencontres, sont trés diversifiés.")
-
 list_activites = df.loc[:, 'sports' : 'yoga'].sum().sort_values()
 labels = list_activites.index
 sports_nul = df.movies.isnull().sum()
@@ -138,5 +139,3 @@ ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 st.pyplot(fig1, use_container_width=False)
 
 st.metric(value=sports_nul, label="Nombre de participant n'ayant pas renseigné ses activités.")
-
-st.divider()

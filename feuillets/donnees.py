@@ -8,18 +8,14 @@ st.subheader("Les informations fournies proviennent d'un fichier csv qui contien
 st.subheader("Nom du dataframe : Speed_Dating_Data.csv")
 st.subheader("Fichier descriptif : ")
 
-# Declare variable.
 if 'pdf_ref' not in ss:
     ss.pdf_ref = None
 
-# Access the uploaded ref via a key.
 st.file_uploader("speed_dating_key.pdf", type=('pdf'), key='pdf')
 
 if ss.pdf:
-    ss.pdf_ref = ss.pdf  # backup
+    ss.pdf_ref = ss.pdf
 
-# Now you can access "pdf_ref" anywhere in your app.
 if ss.pdf_ref:
     binary_data = ss.pdf_ref.getvalue()
     pdf_viewer(input=binary_data, width=1000)
-
