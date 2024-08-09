@@ -36,7 +36,6 @@ expander.write('''
     certainement par sécurité par rapport à une relation fortuite. Cela s'estompe vers la trentaine, 
     âge moyen du premier enfant pour les pays en développement, pour reprendre par la suite.
 ''')
-st.subheader("")
 
 # race féminine
 race = df.groupby('race', dropna=True)['gender'].value_counts().reset_index()

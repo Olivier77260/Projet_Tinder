@@ -89,10 +89,9 @@ else:
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
-
 # domaine d'étude des hommes
-st.subheader("Domaine d'études masculin :")
 etude = df.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()
+
 etude_male = etude[etude.gender == 1].set_index('field_cd')
 etude_male = etude_male.drop('gender', axis=1)
 etude_male = etude_male.squeeze()
@@ -107,45 +106,117 @@ explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
 fig1, ax1 = plt.subplots()
 ax1.pie(etude_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
 ax1.axis('equal')
-st.pyplot(fig1)
-st.metric(value=df.field_cd.isnull().sum(), label="Nombre de participant n'ayant pas renseigné son domaine d'étude.")
+
+# domaine d'étude des femmes
+etude_female = etude[etude.gender == 0].set_index('field_cd')
+etude_female = etude_female.drop('gender', axis=1)
+etude_female = etude_female.squeeze()
+other2 = etude_female[etude_female<etude_female.quantile(.25)].sum()
+etude_female['others'] = other2
+etude_female = etude_female[etude_female>=etude_female.quantile(.25)]
+etude_female.index = etude_female.index.map(student)
+etude_female.sort_values(ascending=True, inplace=True)
+colors = sns.color_palette("bright")
+labels = etude_female.index
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
+fig2, ax2 = plt.subplots()
+ax2.pie(etude_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
+ax2.axis('equal')
+
+# affichage des études
+st.divider()
+col1, col2 = st.columns(2, gap='medium')
+with col1:
+    st.subheader("Domaine d'études masculin :")
+    st.pyplot(fig1)
+    st.metric(value=df['field_cd'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+
+with col2:
+    st.subheader("Domaine d'études féminin :")
+    st.pyplot(fig2)
+    st.metric(value=df['field_cd'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 # professions
+carriere = df.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
+
+# Profession des hommes
+carriere_male = carriere[carriere.gender == 1].set_index('career_c')
+carriere_male = carriere_male.drop('gender', axis=1)
+carriere_male = carriere_male.squeeze()
+other2 = carriere_male[carriere_male<carriere_male.quantile(.50)].sum()
+carriere_male['others'] = other2
+carriere_male = carriere_male[carriere_male>=carriere_male.quantile(.50)]
+carriere_male.index = carriere_male.index.map(ProfilSociaux)
+carriere_male.sort_values(ascending=True, inplace=True)
+labels = carriere_male.index
+explode = (0, 0, 0, 0, 0, 0, 0, 0.1)
+fig3, ax3 = plt.subplots()
+ax3.pie(carriere_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, colors=colors, pctdistance=0.8)
+ax3.axis('equal')
+
+# Profession des femmes
+carriere_female = carriere[carriere.gender == 0].set_index('career_c')
+carriere_female = carriere_female.drop('gender', axis=1)
+carriere_female = carriere_female.squeeze()
+other2 = carriere_female[carriere_female<carriere_female.quantile(.50)].sum()
+carriere_female['others'] = other2
+carriere_female = carriere_female[carriere_female>=carriere_female.quantile(.50)]
+carriere_female.index = carriere_female.index.map(ProfilSociaux)
+carriere_female.sort_values(ascending=True, inplace=True)
+labels = carriere_female.index
+explode = (0, 0, 0, 0, 0, 0, 0, 0.1)
+fig4, ax4 = plt.subplots()
+ax4.pie(carriere_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, colors=colors, pctdistance=0.8)
+ax4.axis('equal')
+
+# affichage des études
 st.divider()
-st.subheader("Une vingtaine de professions sont representées, majoritairement des métiers dits intellectuels.")
+col3, col4 = st.columns(2, gap='medium')
+with col3:
+    st.subheader("Métiers masculin :")
+    st.pyplot(fig3)
+    st.metric(value=df['career_c'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
-# carriere = df.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
-# carriere = carriere[carriere.gender == 1].set_index('career_c')
-# carriere = carriere.drop('gender', axis=1)
-# carriere = carriere.squeeze()
-# other2 = carriere[carriere<carriere.quantile(.50)].sum()
-# carriere['others'] = other2
-# carriere = carriere[carriere>=carriere.quantile(.50)]
+with col4:
+    st.subheader("Métiers féminin :")
+    st.pyplot(fig4)
+    st.metric(value=df['career_c'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
-carriere = df.career_c.value_counts()
-other2 = carriere[carriere<carriere.quantile(.50)].sum()
-carriere['others'] = other2
-carriere = carriere[carriere>=carriere.quantile(.50)]
-carriere.index = carriere.index.map(ProfilSociaux)
-labels = carriere.index
-explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
-fig1, ax1 = plt.subplots()
-ax1.pie(carriere, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, colors=colors, pctdistance=0.8)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-st.pyplot(fig1)
-st.metric(value=df.career_c.isnull().sum(), label="Nombre de participant n'ayant pas renseigné sa profession.")
+expander = st.expander("A noter")
+expander.write('''
+    Ce sont surtout les métiers dits intellectuels qui sont les plus représentés.
+''')
 
 # Hobbies
-st.divider()
-st.subheader("Les hobbies, source de rencontres, sont trés diversifiés.")
-list_activites = df.loc[:, 'sports' : 'yoga'].sum().sort_values()
-labels = list_activites.index
-sports_nul = df.movies.isnull().sum()
-yoga_nul = df.dining.isnull().sum()
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
-fig1, ax1 = plt.subplots()
-ax1.pie(list_activites, explode=explode, labels=labels, autopct="%0.0f%%", pctdistance=0.8)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-st.pyplot(fig1, use_container_width=False)
+hobbies = df.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports':'sum','exercise':'sum','dining':'sum','museums':'sum','art':'sum', 'hiking':'sum','gaming':'sum','clubbing':'sum','reading':'sum','tv':'sum','theater':'sum','movies':'sum','music':'sum','shopping':'sum','yoga':'sum','concerts':'sum'})
 
-st.metric(value=sports_nul, label="Nombre de participant n'ayant pas renseigné ses activités.")
+# Hobbies des femmes
+hobbies_female = hobbies.loc[hobbies.index == 0]
+hobbies_female = hobbies_female.squeeze()
+colors = sns.color_palette("bright")
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+fig5, ax5 = plt.subplots()
+ax5.pie(hobbies_female, explode=explode, labels=hobbies_female.index, colors=colors, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
+ax5.axis('equal')
+
+# Hobbies des hommes
+hobbies_male = hobbies.loc[hobbies.index == 1]
+hobbies_male = hobbies_male.squeeze()
+colors = sns.color_palette("bright")
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+fig6, ax6 = plt.subplots()
+ax6.pie(hobbies_male, explode=explode, labels=hobbies_male.index, colors=colors, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
+ax6.axis('equal')
+
+
+# affichage des hobbies
+col5, col6 = st.columns(2, gap='medium')
+with col5:
+    st.subheader("Hobbies masculin :")
+    st.pyplot(fig6)
+    st.metric(value=df['movies'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+
+with col6:
+    st.subheader("Hobbies féminin :")
+    st.pyplot(fig5)
+    st.metric(value=df['movies'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
