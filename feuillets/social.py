@@ -88,30 +88,40 @@ else:
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 st.checkbox("Suppression des valeurs manquantes", key="del_from")
-# carte du monde
-adresses = pd.read_csv('adresses.csv', sep=';')
-st.subheader("Carte du monde d'où viennet les participants.")
-st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
 
-# domaine d'étude
-st.subheader("Le domaine des études reste conforme aux professions exercées.")
-count = df.field_cd.value_counts().sort_values(ascending=False)
-other = count[count<count.quantile(.25)].sum()
-count['others'] = other
-count = count[count>=count.quantile(.25)]
-count.index = count.index.map(student)
+
+# domaine d'étude des hommes
+st.subheader("Domaine d'études masculin :")
+etude = df.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()
+etude_male = etude[etude.gender == 1].set_index('field_cd')
+etude_male = etude_male.drop('gender', axis=1)
+etude_male = etude_male.squeeze()
+other2 = etude_male[etude_male<etude_male.quantile(.50)].sum()
+etude_male['others'] = other2
+etude_male = etude_male[etude_male>=etude_male.quantile(.50)]
+etude_male.index = etude_male.index.map(student)
+etude_male.sort_values(ascending=True, inplace=True)
 colors = sns.color_palette("bright")
-labels = count.index
-explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+labels = etude_male.index
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
 fig1, ax1 = plt.subplots()
-ax1.pie(count, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+ax1.pie(etude_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
+ax1.axis('equal')
 st.pyplot(fig1)
 st.metric(value=df.field_cd.isnull().sum(), label="Nombre de participant n'ayant pas renseigné son domaine d'étude.")
 
 # professions
 st.divider()
 st.subheader("Une vingtaine de professions sont representées, majoritairement des métiers dits intellectuels.")
+
+# carriere = df.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
+# carriere = carriere[carriere.gender == 1].set_index('career_c')
+# carriere = carriere.drop('gender', axis=1)
+# carriere = carriere.squeeze()
+# other2 = carriere[carriere<carriere.quantile(.50)].sum()
+# carriere['others'] = other2
+# carriere = carriere[carriere>=carriere.quantile(.50)]
+
 carriere = df.career_c.value_counts()
 other2 = carriere[carriere<carriere.quantile(.50)].sum()
 carriere['others'] = other2
