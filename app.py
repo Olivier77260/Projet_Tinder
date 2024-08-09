@@ -22,9 +22,9 @@ def main():
     st.session_state.dfFalse = load_data_False() 
 
     preambule = st.Page("feuillets/preambule.py", title="Préambule", icon=":material/engineering:", default=True)
-    Projet = st.Page("feuillets/projet.py", title="Projet", icon=":material/engineering:", default=True)
-    Objectif = st.Page("feuillets/objectif.py", title="Objectif", icon=":material/engineering:", default=True)
-    portee = st.Page("feuillets/portee.py", title="Portée du projet", icon=":material/engineering:", default=True)
+    projet = st.Page("feuillets/projet.py", title="Projet", icon=":material/engineering:", default=False)
+    objectif = st.Page("feuillets/objectif.py", title="Objectif", icon=":material/engineering:", default=False)
+    portee = st.Page("feuillets/portee.py", title="Portée du projet", icon=":material/engineering:", default=False)
 
     donnees = st.Page("feuillets/donnees.py", title="Données", icon=":material/database:")
 
@@ -42,7 +42,7 @@ def main():
     premier_rdv = st.Page("feuillets/first_rdv.py", title="Premier rendez-vous", icon=":material/diversity_3:")
 
     pages = {
-        "🏠 Préambule": [preambule, Projet, Objectif, portee,],
+        "🏠 Préambule": [preambule, projet, objectif, portee,],
         "📊 Données fournies": [donnees,],
         "🛠️ Analyse des données": [analyse,],
         "🌍 Profil des participants": [physique, social,],
