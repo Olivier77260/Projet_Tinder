@@ -7,6 +7,8 @@ def load_data_True():
     df = df.dropna(subset=['from', 'race'])
     df = df.drop(df[df.age==55].index)
     return df
+
+@st.cache_data
 def load_data_False():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
     return df
@@ -19,35 +21,45 @@ def main():
         st.session_state.del_from = False
 
     st.session_state.dfTrue = load_data_True()
-    st.session_state.dfFalse = load_data_False() 
+    st.session_state.dfFalse = load_data_False()
 
-    preambule = st.Page("feuillets/preambule.py", title="Préambule", icon=":material/engineering:", default=True)
-    projet = st.Page("feuillets/projet.py", title="Projet", icon=":material/engineering:", default=False)
-    objectif = st.Page("feuillets/objectif.py", title="Objectif", icon=":material/engineering:", default=False)
-    portee = st.Page("feuillets/portee.py", title="Portée du projet", icon=":material/engineering:", default=False)
+    with st.sidebar:
+        manque = st.radio(
+        "Suppression des valeurs manquantes",
+        ["Non", "Oui"],
+        horizontal=True,
+        )
 
-    donnees = st.Page("feuillets/donnees.py", title="Données", icon=":material/database:")
+    if manque == "Non":
+        st.session_state.del_from = False
+    else:
+        st.session_state.del_from = True
+    
+    preambule = st.Page("feuillets/preambule.py", title="1 - Préambule", icon="📇", default=True)
+    projet = st.Page("feuillets/projet.py", title="2 - Projet", icon="🚧", default=False)
+    objectif = st.Page("feuillets/objectif.py", title="3 - Objectif", icon="🎯", default=False)
+    portee = st.Page("feuillets/portee.py", title="4 - Portée du projet", icon="🖼️", default=False)
 
-    analyse = st.Page("feuillets/analyse.py", title="Analyses", icon=":material/diversity_3:")
+    donnees = st.Page("feuillets/donnees.py", title="- Données", icon=":material/database:")
 
-    physique = st.Page("feuillets/physique.py", title="Physique", icon="♂️")
-    social = st.Page("feuillets/social.py", title="Social", icon=":material/language:")
+    exploration = st.Page("feuillets/exploration.py", title="- Exploration", icon="📈")
 
-    habitudes = st.Page("feuillets/habitudes.py", title="Habitudes", icon=":material/person:")
+    physique = st.Page("feuillets/physique.py", title="1 - Physique", icon="♂️")
+    social = st.Page("feuillets/social.py", title="2 - Social", icon=":material/language:")
 
-    attentes = st.Page("feuillets/attentes.py", title="Attentes", icon=":material/diversity_3:")
+    habitudes = st.Page("feuillets/habitudes.py", title="- Habitudes", icon="🍀")
 
-    speed_dating = st.Page("feuillets/speed_dating.py", title="Speed Dating", icon=":material/diversity_3:")
-
-    premier_rdv = st.Page("feuillets/first_rdv.py", title="Premier rendez-vous", icon=":material/diversity_3:")
-
+    attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="⏱️")
+    speed_dating = st.Page("feuillets/speed_dating.py", title="2 - Speed Dating", icon="🎈")
+    premier_rdv = st.Page("feuillets/first_rdv.py", title="3 - Premier rendez-vous", icon="🎉")
+    
     pages = {
         "🏠 Préambule": [preambule, projet, objectif, portee,],
         "📊 Données fournies": [donnees,],
-        "🛠️ Analyse des données": [analyse,],
+        "🛠️ Analyse des données": [exploration,],
         "🌍 Profil des participants": [physique, social,],
         "🌈 Habitudes de vie des participants": [habitudes,],
-        "⏱️ Attentes des participants": [attentes, speed_dating, premier_rdv,],
+        "👩‍🚀 Expérimentation": [attentes, speed_dating, premier_rdv,],
     }
     
     pg = st.navigation(pages)

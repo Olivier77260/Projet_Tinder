@@ -87,7 +87,6 @@ else:
     df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 # domaine d'étude des hommes
 etude = df.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()

@@ -38,7 +38,6 @@ def quality(x):
     return size
 
 st.markdown("#### <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 objectifs = df.groupby('goal', dropna=True)['gender'].value_counts().reset_index()
 objectifs['gender'] = objectifs['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')

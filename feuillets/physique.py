@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import time
 
 def Races(x):
     if x == 1.0:
@@ -23,8 +24,9 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
+adresses = pd.read_csv('adresses.csv', sep=';')
+
 st.markdown("#### <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
 st.subheader("""Graphique des âges :""")
 
 age_gender = df.groupby('age')['gender'].value_counts().reset_index()
@@ -79,7 +81,6 @@ with col2:
     st.metric(value=df['race'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
 
 # carte du monde
-adresses = pd.read_csv('adresses.csv', sep=';')
 st.subheader("Carte du monde d'où viennet les participants.")
 st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
 

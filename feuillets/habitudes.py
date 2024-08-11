@@ -24,23 +24,10 @@ else:
     df = st.session_state.dfFalse
 
 st.markdown("#### <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
-st.checkbox("Suppression des valeurs manquantes", key="del_from")
 
 sortie_rdv = pd.merge(df.go_out.value_counts(), df.date.value_counts(), right_index=True, left_index=True)
 sortie_rdv = sortie_rdv.rename(columns={'count_x': 'Sorties', 'count_y': 'Rdv'})
 sortie_rdv['index'] = sortie_rdv.index.map(Frequence2)
-
-st.divider()
-col2, col3 = st.columns(2, gap='large')
-with col2:
-    st.subheader("Fréquence des sorties.")
-    st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='Fréquence des sorties', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
-    st.metric(value=df.go_out.isnull().sum(), label="Nombre de valeurs manquantes.")
-
-with col3:
-    st.subheader("Fréquence des rendez-vous.")
-    st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='Fréquence des rendes-vous', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
-    st.metric(value=df.date.isnull().sum(), label="Nombre de valeurs manquantes.")
 
 ethnic = df['imprace'].value_counts().reset_index(name='race')
 ethnic['iid'] = ethnic['imprace']
@@ -49,15 +36,61 @@ religious['iid'] = religious['imprelig']
 dataset = religious.merge(ethnic, on='iid')
 dataset = dataset.sort_values('iid')
 
-st.divider()
-col4, col5 = st.columns(2, gap='large')
-with col4:
+tab1, tab2, tab3 = st.tabs(["Sorties et rendez-vous", "Races", "Religions"])
+
+with tab1:
+    col2, col3 = st.columns(2, gap='large')
+    with col2:
+        st.subheader("Fréquence des sorties.")
+        st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='Fréquence des sorties', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
+        st.metric(value=df.go_out.isnull().sum(), label="Nombre de valeurs manquantes.")
+
+    with col3:
+        st.subheader("Fréquence des rendez-vous.")
+        st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='Fréquence des rendes-vous', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
+        st.metric(value=df.date.isnull().sum(), label="Nombre de valeurs manquantes.")
+
+    expander = st.expander("A noter")
+    expander.write('''
+        Une grandes majorité des participant sont des personnes qui sortent trés souvent. 
+        En oposition avec les rendez-vous.
+    ''')
+
+
+with tab2:
     st.subheader("Importance de la race dans la relation.")
     st.bar_chart(dataset, x="iid", y="race", stack=False, use_container_width=True)
     st.metric(value=df.imprace.isnull().sum(), label="Nombre de valeurs manquantes.")
-    
-
-with col5:
+with tab3:
     st.subheader("Importance de la religion.")
     st.bar_chart(dataset, x="iid", y="religion", stack=False, use_container_width=True)
     st.metric(value=df.imprelig.isnull().sum(), label="Nombre de valeurs manquantes.")
+
+
+
+# st.divider()
+# col2, col3 = st.columns(2, gap='large')
+# with col2:
+#     st.subheader("Fréquence des sorties.")
+#     st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='Fréquence des sorties', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
+#     st.metric(value=df.go_out.isnull().sum(), label="Nombre de valeurs manquantes.")
+
+# with col3:
+#     st.subheader("Fréquence des rendez-vous.")
+#     st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='Fréquence des rendes-vous', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
+#     st.metric(value=df.date.isnull().sum(), label="Nombre de valeurs manquantes.")
+
+
+
+# st.divider()
+# col4, col5 = st.columns(2, gap='large')
+# with col4:
+#     st.subheader("Importance de la race dans la relation.")
+#     st.bar_chart(dataset, x="iid", y="race", stack=False, use_container_width=True)
+#     st.metric(value=df.imprace.isnull().sum(), label="Nombre de valeurs manquantes.")
+    
+
+# with col5:
+#     st.subheader("Importance de la religion.")
+#     st.bar_chart(dataset, x="iid", y="religion", stack=False, use_container_width=True)
+#     st.metric(value=df.imprelig.isnull().sum(), label="Nombre de valeurs manquantes.")
