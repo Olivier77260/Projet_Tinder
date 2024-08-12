@@ -11,12 +11,11 @@ st.markdown("## <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>",
 tab1, tab2, tab3, tab4 = st.tabs(["##### :blue[***1. Profil du fichier csv***]", "##### :blue[***2. Nom des colonnes***]", "##### :blue[***3. Données manquantes***]", "##### :blue[***4. Ages***]"])
 
 with tab1:
+    st.divider()
     col1, col2 = st.columns(2, gap="medium")
-    with col1:
-        st.divider()
+    with col1:        
         st.metric(label="Nombre de lignes", value=df.shape[0])
     with col2:
-        st.divider()
         st.metric(label="Nombre de colonnes", value=df.shape[1])
 
     st.write("Affichage des 5 premiéres lignes")

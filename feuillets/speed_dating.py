@@ -82,30 +82,28 @@ ax6.axis('equal')
 
 #affichage preferences
 with tab1:
+    st.divider()
     col3, col4 = st.columns(2, gap='medium')
     with col3:
-        st.divider()
         st.subheader("Préférences déclarées au speed dating envers les hommes.")
         st.pyplot(fig3)
         st.metric(value=preference_male1['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col4:
-        st.divider()
         st.subheader("Suite au premier rendez-vous l'attractivité envers les hommes n'y est pas.")
         st.pyplot(fig5)
         st.metric(value=preference_female1['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 # affichage évaluations
 with tab2:
+    st.divider()
     col5, col6 = st.columns(2, gap='medium')
     with col5:
-        st.divider()
         st.subheader("Préférences déclarées au premier rendez-vous envers les femmes.")
         st.pyplot(fig4)
         st.metric(value=preference_male1['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.") 
 
     with col6:
-        st.divider()
         st.subheader("Suite au premier rendez-vous l'attractivité envers les femmes n'y est pas.")
         st.pyplot(fig6)
         st.metric(value=preference_female1['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")

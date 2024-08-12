@@ -2,7 +2,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import time
 
 def Races(x):
     if x == 1.0:
@@ -30,12 +29,14 @@ st.markdown("## <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", uns
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Graphique des âges***]", "##### :blue[***2. Type de races***]", "##### :blue[***3. Région du monde***]"])
 
+#affichage des ages
 with tab1:
     st.divider()
     st.subheader("""Graphique des âges :""")
     age_gender = df.groupby('age')['gender'].value_counts().reset_index()
     age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
-    st.bar_chart(age_gender, x="age", y="count", color="gender", stack=False, use_container_width=True)
+    colors="gender"
+    st.bar_chart(age_gender, x="age", y="count", color=colors, stack=False, use_container_width=True)
     expander = st.expander("A noter")
     expander.write('''
         Si on regarde par tranche d’âge, ce sont les femmes qui utilisent le plus l'application, 
@@ -61,7 +62,6 @@ race.race = race.race.map(Races)
 race = race[race.gender == 1]
 race = race.drop('gender', axis=1)
 race.sort_values('count', ascending=True, inplace=True)
-color = sns.color_palette("bright")
 explode = (0, 0, 0, 0, 0.1)
 fig2, ax2 = plt.subplots()
 ax2.pie(race['count'], explode=explode, labels=race.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
@@ -69,16 +69,14 @@ ax2.axis('equal')
 
 
 with tab2:
+    st.divider()
     col1, col2 = st.columns(2, gap='large')
     with col1:
-        st.divider()
         st.subheader("Répartition des races de la gente féminine :")
         st.pyplot(fig1)
         st.metric(value=df['race'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
         
-
     with col2:
-        st.divider()
         st.subheader("Répartition des races de la gente masculine :")
         st.pyplot(fig2)
         st.metric(value=df['race'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")

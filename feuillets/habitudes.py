@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 
 def Frequence2(x):
     if x == 1:
@@ -25,17 +24,13 @@ else:
 
 st.markdown("## <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
 
-sortie_rdv = pd.merge(df.go_out.value_counts(), df.date.value_counts(), right_index=True, left_index=True)
-sortie_rdv = sortie_rdv.rename(columns={'count_x': 'Sorties', 'count_y': 'Rdv'})
-sortie_rdv['index'] = sortie_rdv.index.map(Frequence2)
+# frequence des sorties
+sorties = df.groupby('date', dropna=True)['gender'].value_counts().reset_index()
+sorties.date = sorties.date.map(Frequence2)
 
-# Rdv masculin
+# frequence des rendez-vous
 rdv = df.groupby('go_out', dropna=True)['gender'].value_counts().reset_index()
-rdv_male = rdv[rdv.gender == 1].set_index('go_out')
-rdv_male = rdv_male.drop('gender', axis=1)
-rdv_male.sort_values(by="count", ascending=False, inplace=True)
-st.bar_chart(rdv_male, y='count', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
-
+rdv.go_out = rdv.go_out.map(Frequence2)
 
 # race masculine
 race = df.groupby('imprace', dropna=True)['gender'].value_counts().reset_index()
@@ -46,6 +41,7 @@ race_male.sort_values(by="count", ascending=False, inplace=True)
 # race féminine
 race_female = race[race.gender == 0].set_index('imprace')
 race_female = race_female.drop('gender', axis=1)
+race_female = race_female.drop(race_female[race_female.index==0].index)
 race_female.sort_values(by="count", ascending=False, inplace=True)
 
 # religion masculine
@@ -61,19 +57,19 @@ religion_female.sort_values(by="count", ascending=False, inplace=True)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Sorties et rendez-vous***]", "##### :blue[***2. Races***]", "##### :blue[***3. Religions***]"])
 
+# affichage des rdv et sorties
 with tab1:
+    st.divider()
     col2, col3 = st.columns(2, gap='large')
     with col2:
-        st.divider()
         st.subheader("Fréquence des sorties.")
-        st.bar_chart(sortie_rdv, x="index", y='Sorties', x_label='Fréquence des sorties', stack=False, use_container_width=True, color="#dec1ff", horizontal=True)
-        st.metric(value=df.go_out.isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.bar_chart(sorties, x='date', y='count', stack=False, y_label="Fréquence des sorties", use_container_width=True, color="gender", horizontal=True)
+        st.metric(value=df.date.isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col3:
-        st.divider()
-        st.subheader("Fréquence des rendez-vous.")
-        st.bar_chart(sortie_rdv, x="index", y='Rdv', x_label='Fréquence des rendes-vous', stack=False, use_container_width=True, color= "#00d43c", horizontal=True)
-        st.metric(value=df.date.isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.subheader("Fréquence des rendez-vous.")        
+        st.bar_chart(rdv, x='go_out', y='count', stack=False, y_label="Fréquence des rendez-vous", use_container_width=True, color="gender", horizontal=True)
+        st.metric(value=df.go_out.isnull().sum(), label="Nombre de valeurs manquantes.")
 
     expander = st.expander("A noter")
     expander.write('''

@@ -124,15 +124,14 @@ ax2.axis('equal')
 
 with tab1:
     # affichage des études
+    st.divider()
     col1, col2 = st.columns(2, gap='medium')
-    with col1:
-        st.divider()
+    with col1:        
         st.subheader("Domaine d'études masculin :")
         st.pyplot(fig1)
         st.metric(value=df['field_cd'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
-        st.divider()
         st.subheader("Domaine d'études féminin :")
         st.pyplot(fig2)
         st.metric(value=df['field_cd'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
@@ -172,15 +171,14 @@ ax4.axis('equal')
 
 # affichage des études
 with tab2:
+    st.divider()
     col3, col4 = st.columns(2, gap='medium')
     with col3:
-        st.divider()
         st.subheader("Métiers masculin :")
         st.pyplot(fig3)
         st.metric(value=df['career_c'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col4:
-        st.divider()
         st.subheader("Métiers féminin :")
         st.pyplot(fig4)
         st.metric(value=df['career_c'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
@@ -212,16 +210,15 @@ ax6.pie(hobbies_male, explode=explode, labels=hobbies_male.index, autopct='%0.0f
 ax6.axis('equal')
 
 with tab3:
+    st.divider()
     # affichage des hobbies
     col5, col6 = st.columns(2, gap='medium')
     with col5:
-        st.divider()
         st.subheader("Hobbies masculin :")
         st.pyplot(fig6)
         st.metric(value=df['movies'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col6:
-        st.divider()
         st.subheader("Hobbies féminin :")
         st.pyplot(fig5)
         st.metric(value=df['movies'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")

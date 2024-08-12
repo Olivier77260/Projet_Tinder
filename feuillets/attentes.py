@@ -64,16 +64,15 @@ ax2.pie(objectifs_female, explode=explode, labels=objectifs_male.index, autopct=
 ax2.axis('equal')
 
 with tab1:
+    st.divider()
     # affichage attentes
     col1, col2 = st.columns(2, gap='medium')
     with col1:
-        st.divider()
         st.subheader("Attentes des hommes.")
         st.pyplot(fig1)
         st.metric(value=df['goal'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
-        st.divider()
         st.subheader("Attentes des femmes.")
         st.pyplot(fig2)
         st.metric(value=df['goal'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
@@ -101,10 +100,10 @@ ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, colors
 ax4.axis('equal')
 
 with tab2:
+    st.divider()
     # affichage qualités
     col3, col4 = st.columns(2, gap='medium')
     with col3:
-        st.divider()
         st.subheader("Qualités recherchées par les femmes.")
         st.pyplot(fig3)
         st.metric(value=df['attr1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
@@ -115,7 +114,6 @@ with tab2:
         st.metric(value=df['amb1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'ambitious'.")
 
     with col4:
-        st.divider()
         st.subheader("Qualités recherchées par les hommes.")
         st.pyplot(fig4)
         st.metric(value=df['shar1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
