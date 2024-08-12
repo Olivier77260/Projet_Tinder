@@ -6,15 +6,17 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-st.markdown("#### <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
+st.markdown("## <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Profil du fichier csv", "Nom des colonnes", "Données manquantes", "Ages"])
+tab1, tab2, tab3, tab4 = st.tabs(["##### :blue[***1. Profil du fichier csv***]", "##### :blue[***2. Nom des colonnes***]", "##### :blue[***3. Données manquantes***]", "##### :blue[***4. Ages***]"])
 
 with tab1:
     col1, col2 = st.columns(2, gap="medium")
     with col1:
+        st.divider()
         st.metric(label="Nombre de lignes", value=df.shape[0])
     with col2:
+        st.divider()
         st.metric(label="Nombre de colonnes", value=df.shape[1])
 
     st.write("Affichage des 5 premiéres lignes")
@@ -35,6 +37,7 @@ with tab1:
     st.subheader("Beaucoup de données catégorielles ont été converties numériquement.")
 
 with tab2:
+    st.divider()
     nb_participant = str(df['iid'].max())
     st.subheader("Le nombre de participants à cette enquête est de " + nb_participant + " personnes, déterminé par la colonne iid suivant la note explicative, ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde.")
 
@@ -44,7 +47,7 @@ with tab2:
     st.dataframe(name_colonnes, width=200)
 
 with tab3:
-    
+    st.divider()
     in_null = df.isnull().sum()
     st.dataframe(in_null, width=160)
     st.subheader("Beaucoup de données sont manquantes et demanderont une attention particulière.")
@@ -53,6 +56,7 @@ with tab3:
 
 
 with tab4:
+    st.divider()
     st.subheader("Profil des ages masculins et féminins de nos participants")
     age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
 

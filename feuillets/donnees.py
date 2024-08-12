@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import session_state as ss
 from streamlit_pdf_viewer import pdf_viewer
 
-st.markdown("#### <font color='tomato'><ins>**DONNEES FOURNIES**</ins></font>", unsafe_allow_html=True)
+st.markdown("## <font color='tomato'><ins>**DONNEES FOURNIES**</ins></font>", unsafe_allow_html=True)
 
 st.subheader("Les informations fournies proviennent d'un fichier csv qui contient les données d'une étude faite suivant un panel de participants et un document explicatif sur cette base de données.")
 st.subheader("Nom du dataframe : Speed_Dating_Data.csv")

@@ -105,3 +105,4 @@ with col6:
     st.pyplot(fig6)
     st.metric(value=female0['pf_o_att'].isnull().sum(), label="Nombre de valeurs manquantes.")
 
+st.balloons()

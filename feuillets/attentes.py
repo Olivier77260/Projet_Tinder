@@ -37,7 +37,9 @@ def quality(x):
         size = "Has shared interests/hobbies"
     return size
 
-st.markdown("#### <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
+st.markdown("## <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
+
+tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Leurs attentes***]", "##### :blue[***2. Les qualités recherchées***]", "##### :blue[***3. Leurs espoirs***]"])
 
 objectifs = df.groupby('goal', dropna=True)['gender'].value_counts().reset_index()
 objectifs['gender'] = objectifs['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
@@ -61,18 +63,20 @@ fig2, ax2 = plt.subplots()
 ax2.pie(objectifs_female, explode=explode, labels=objectifs_male.index, autopct='%0.0f%%', shadow=True, startangle=90)
 ax2.axis('equal')
 
-# affichage attentes
-st.divider()
-col1, col2 = st.columns(2, gap='medium')
-with col1:
-    st.subheader("Attentes des hommes.")
-    st.pyplot(fig1)
-    st.metric(value=df['goal'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+with tab1:
+    # affichage attentes
+    col1, col2 = st.columns(2, gap='medium')
+    with col1:
+        st.divider()
+        st.subheader("Attentes des hommes.")
+        st.pyplot(fig1)
+        st.metric(value=df['goal'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
-with col2:
-    st.subheader("Attentes des femmes.")
-    st.pyplot(fig2)
-    st.metric(value=df['goal'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+    with col2:
+        st.divider()
+        st.subheader("Attentes des femmes.")
+        st.pyplot(fig2)
+        st.metric(value=df['goal'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 list_search = df.groupby('gender', dropna=True).aggregate({'attr1_1':'sum','shar1_1':'sum','sinc1_1':'sum','intel1_1':'sum','fun1_1':'sum','amb1_1':'sum'})
 
@@ -96,34 +100,37 @@ fig4, ax4 = plt.subplots()
 ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, colors=colors, autopct='%0.0f%%', shadow=True, startangle=90)
 ax4.axis('equal')
 
-# affichage qualités
-st.divider()
-col3, col4 = st.columns(2, gap='medium')
-with col3:
-    st.subheader("Qualités recherchées par les femmes.")
-    st.pyplot(fig3)
-    st.metric(value=df['attr1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
-    st.metric(value=df['shar1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes intéréts et passes-temps communs.")
-    st.metric(value=df['sinc1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'sincere'.")
-    st.metric(value=df['intel1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'intelligent'.")
-    st.metric(value=df['fun1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'fun'.")
-    st.metric(value=df['amb1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'ambitious'.")
+with tab2:
+    # affichage qualités
+    col3, col4 = st.columns(2, gap='medium')
+    with col3:
+        st.divider()
+        st.subheader("Qualités recherchées par les femmes.")
+        st.pyplot(fig3)
+        st.metric(value=df['attr1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
+        st.metric(value=df['shar1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes intéréts et passes-temps communs.")
+        st.metric(value=df['sinc1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'sincere'.")
+        st.metric(value=df['intel1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'intelligent'.")
+        st.metric(value=df['fun1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'fun'.")
+        st.metric(value=df['amb1_1'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes 'ambitious'.")
 
-with col4:
-    st.subheader("Qualités recherchées par les hommes.")
-    st.pyplot(fig4)
-    st.metric(value=df['shar1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
-    st.metric(value=df['shar1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes intéréts et passes-temps communs.")
-    st.metric(value=df['sinc1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'sincere'.")
-    st.metric(value=df['intel1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'intelligent'.")
-    st.metric(value=df['fun1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'fun'.")
-    st.metric(value=df['amb1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'ambitious'.")
+    with col4:
+        st.divider()
+        st.subheader("Qualités recherchées par les hommes.")
+        st.pyplot(fig4)
+        st.metric(value=df['shar1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'attractive'.")
+        st.metric(value=df['shar1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes intéréts et passes-temps communs.")
+        st.metric(value=df['sinc1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'sincere'.")
+        st.metric(value=df['intel1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'intelligent'.")
+        st.metric(value=df['fun1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'fun'.")
+        st.metric(value=df['amb1_1'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes 'ambitious'.")
 
-st.divider()
-st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur avec telle application""")
-happy_gender = df.groupby('exphappy', dropna=True)['gender'].value_counts().reset_index()
-happy_gender['gender'] = happy_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
-colors = "gender"
-st.bar_chart(happy_gender, x="exphappy", y="count", color=colors, stack=False, use_container_width=True)
-st.metric(value=df['exphappy'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
-st.metric(value=df['exphappy'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
+with tab3:
+    st.divider()
+    st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur avec telle application""")
+    happy_gender = df.groupby('exphappy', dropna=True)['gender'].value_counts().reset_index()
+    happy_gender['gender'] = happy_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+    colors = "gender"
+    st.bar_chart(happy_gender, x="exphappy", y="count", color=colors, stack=False, use_container_width=True)
+    st.metric(value=df['exphappy'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
+    st.metric(value=df['exphappy'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")

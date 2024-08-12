@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.markdown("#### <font color='tomato'><ins>**PROJET**</ins></font>", unsafe_allow_html=True)
+st.markdown("## <font color='tomato'><ins>**PROJET**</ins></font>", unsafe_allow_html=True)
 
 st.subheader("""L’équipe marketing a besoin d’aide sur un nouveau projet. Ils connaissent une diminution du nombre de correspondances """
              """et ils essaient de trouver un moyen de comprendre ce qui suscite l’intérêt des gens les uns pour les autres.""")

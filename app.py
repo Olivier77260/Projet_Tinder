@@ -25,7 +25,7 @@ def main():
 
     with st.sidebar:
         manque = st.radio(
-        "Suppression des valeurs manquantes",
+        "Suppression des valeurs manquantes et abérantes",
         ["Non", "Oui"],
         horizontal=True,
         )
