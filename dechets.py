@@ -40,3 +40,14 @@ st.line_chart(size, x='Rdv')
 
 age = df.age.value_counts()
 st.scatter_chart(age, x_label='age', color='#e80e0e', size=200)
+
+# race féminine
+race_female = race[race.gender == 0].set_index('imprace')
+race_female = race_female.drop('gender', axis=1)
+race_female = race_female.drop(race_female[race_female.index==0].index)
+race_female.sort_values(by="count", ascending=False, inplace=True)
+
+# religion féminine
+religion_female = religion[religion.gender == 0].set_index('imprelig')
+religion_female = religion_female.drop('gender', axis=1)
+religion_female.sort_values(by="count", ascending=False, inplace=True)

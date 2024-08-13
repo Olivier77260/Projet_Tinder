@@ -34,9 +34,14 @@ with tab1:
     st.divider()
     st.subheader("""Graphique des âges :""")
     age_gender = df.groupby('age')['gender'].value_counts().reset_index()
-    age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+    age_gender['gender'] = age_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors="gender"
     st.bar_chart(age_gender, x="age", y="count", color=colors, stack=False, use_container_width=True)
+    col1, col2 = st.columns(2, gap='large')
+    with col1:
+        st.metric(value=df['age'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
+    with col2:
+        st.metric(value=df['age'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
     expander = st.expander("A noter")
     expander.write('''
         Si on regarde par tranche d’âge, ce sont les femmes qui utilisent le plus l'application, 
