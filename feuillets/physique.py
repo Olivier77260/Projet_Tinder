@@ -25,6 +25,7 @@ else:
 
 df2 = df.groupby(['age', 'gender', 'race'])['iid'].value_counts().reset_index()
 
+
 adresses = pd.read_csv('adresses.csv', sep=';')
 
 st.markdown("## <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)

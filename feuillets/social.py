@@ -104,7 +104,10 @@ etude_male = etude_male[etude_male>=etude_male.quantile(.50)]
 etude_male.index = etude_male.index.map(student)
 etude_male.sort_values(ascending=True, inplace=True)
 labels = etude_male.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
+explode = list()
+for i in range(len(etude_male)-1):
+    explode.append(0)
+explode.append(0.1)
 fig1, ax1 = plt.subplots()
 ax1.pie(etude_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
 ax1.axis('equal')
@@ -119,7 +122,10 @@ etude_female = etude_female[etude_female>=etude_female.quantile(.25)]
 etude_female.index = etude_female.index.map(student)
 etude_female.sort_values(ascending=True, inplace=True)
 labels = etude_female.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.1)
+explode = list()
+for i in range(len(etude_female)-1):
+    explode.append(0)
+explode.append(0.1)
 fig2, ax2 = plt.subplots()
 ax2.pie(etude_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
 ax2.axis('equal')
@@ -151,9 +157,12 @@ carriere_male = carriere_male[carriere_male>=carriere_male.quantile(.50)]
 carriere_male.index = carriere_male.index.map(ProfilSociaux)
 carriere_male.sort_values(ascending=True, inplace=True)
 labels = carriere_male.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0.1)
+explode = list()
+for i in range(len(carriere_male)-1):
+    explode.append(0)
+explode.append(0.1)
 fig3, ax3 = plt.subplots()
-ax3.pie(carriere_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, pctdistance=0.8)
+ax3.pie(carriere_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
 ax3.axis('equal')
 
 # Profession des femmes
@@ -166,9 +175,12 @@ carriere_female = carriere_female[carriere_female>=carriere_female.quantile(.50)
 carriere_female.index = carriere_female.index.map(ProfilSociaux)
 carriere_female.sort_values(ascending=True, inplace=True)
 labels = carriere_female.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0.1)
+explode = list()
+for i in range(len(carriere_female)-1):
+    explode.append(0)
+explode.append(0.1)
 fig4, ax4 = plt.subplots()
-ax4.pie(carriere_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, pctdistance=0.8)
+ax4.pie(carriere_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
 ax4.axis('equal')
 
 # affichage des études
@@ -197,18 +209,16 @@ hobbies = df2.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports
 hobbies_female = hobbies.loc[hobbies.index == 0]
 hobbies_female = hobbies_female.squeeze()
 colors = sns.color_palette("bright")
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 fig5, ax5 = plt.subplots()
-ax5.pie(hobbies_female, explode=explode, labels=hobbies_female.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
+ax5.pie(hobbies_female, labels=hobbies_female.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
 ax5.axis('equal')
 
 # Hobbies des hommes
 hobbies_male = hobbies.loc[hobbies.index == 1]
 hobbies_male = hobbies_male.squeeze()
 colors = sns.color_palette("bright")
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 fig6, ax6 = plt.subplots()
-ax6.pie(hobbies_male, explode=explode, labels=hobbies_male.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
+ax6.pie(hobbies_male, labels=hobbies_male.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
 ax6.axis('equal')
 
 with tab3:

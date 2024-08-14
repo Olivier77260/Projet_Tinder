@@ -5,8 +5,14 @@ import pandas as pd
 def load_data_True():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
     # df = df.dropna(subset=['from', 'race'])
-    df = df.drop(df[df.age==55].index)
-    return df
+    # indexNames = df[df["age"] <= 40].index
+    # df.drop(indexNames, inplace=True)
+    # df = df.drop(df[df.age<=55].index)
+    # indexNames = df[(df["age"] >= 37) & (df["age"] <= 18)].index
+    # # Delete these row indexes from dataFrame
+    # df = df.drop(indexNames)
+
+    return df[(df["age"] < 37) & (df["age"] > 18)]
 
 @st.cache_data
 def load_data_False():
@@ -25,7 +31,7 @@ def main():
 
     with st.sidebar:
         manque = st.radio(
-        "Suppression des valeurs manquantes et abérantes",
+        "Suppression des valeurs abérantes",
         ["Non", "Oui"],
         horizontal=True,
         )
