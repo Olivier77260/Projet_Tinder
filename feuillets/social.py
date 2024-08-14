@@ -86,12 +86,14 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
+df2 = df.groupby(['sports','tvsports','exercise','dining','museums','art', 'hiking','gaming','clubbing','reading','tv','theater','movies','music','shopping','yoga','concerts', 'gender', 'career_c', 'field_cd'])['iid'].value_counts().reset_index()
+
 st.markdown("## <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Domaine des études***]", "##### :blue[***2. Professions***]", "##### :blue[***3. Hobbies***]"])
 
 # domaine d'étude des hommes
-etude = df.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()
+etude = df2.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()
 
 etude_male = etude[etude.gender == 1].set_index('field_cd')
 etude_male = etude_male.drop('gender', axis=1)
@@ -102,7 +104,7 @@ etude_male = etude_male[etude_male>=etude_male.quantile(.50)]
 etude_male.index = etude_male.index.map(student)
 etude_male.sort_values(ascending=True, inplace=True)
 labels = etude_male.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1)
 fig1, ax1 = plt.subplots()
 ax1.pie(etude_male, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
 ax1.axis('equal')
@@ -129,15 +131,15 @@ with tab1:
     with col1:        
         st.subheader("Domaine d'études masculin :")
         st.pyplot(fig1)
-        st.metric(value=df['field_cd'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['field_cd'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         st.subheader("Domaine d'études féminin :")
         st.pyplot(fig2)
-        st.metric(value=df['field_cd'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['field_cd'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 # professions
-carriere = df.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
+carriere = df2.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
 
 # Profession des hommes
 carriere_male = carriere[carriere.gender == 1].set_index('career_c')
@@ -164,7 +166,7 @@ carriere_female = carriere_female[carriere_female>=carriere_female.quantile(.50)
 carriere_female.index = carriere_female.index.map(ProfilSociaux)
 carriere_female.sort_values(ascending=True, inplace=True)
 labels = carriere_female.index
-explode = (0, 0, 0, 0, 0, 0, 0, 0.1)
+explode = (0, 0, 0, 0, 0, 0, 0, 0, 0.1)
 fig4, ax4 = plt.subplots()
 ax4.pie(carriere_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=False, startangle=180, pctdistance=0.8)
 ax4.axis('equal')
@@ -176,12 +178,12 @@ with tab2:
     with col3:
         st.subheader("Métiers masculin :")
         st.pyplot(fig3)
-        st.metric(value=df['career_c'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['career_c'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col4:
         st.subheader("Métiers féminin :")
         st.pyplot(fig4)
-        st.metric(value=df['career_c'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['career_c'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     expander = st.expander("A noter")
     expander.write('''
@@ -189,7 +191,7 @@ with tab2:
     ''')
 
 # Hobbies
-hobbies = df.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports':'sum','exercise':'sum','dining':'sum','museums':'sum','art':'sum', 'hiking':'sum','gaming':'sum','clubbing':'sum','reading':'sum','tv':'sum','theater':'sum','movies':'sum','music':'sum','shopping':'sum','yoga':'sum','concerts':'sum'})
+hobbies = df2.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports':'sum','exercise':'sum','dining':'sum','museums':'sum','art':'sum', 'hiking':'sum','gaming':'sum','clubbing':'sum','reading':'sum','tv':'sum','theater':'sum','movies':'sum','music':'sum','shopping':'sum','yoga':'sum','concerts':'sum'})
 
 # Hobbies des femmes
 hobbies_female = hobbies.loc[hobbies.index == 0]
@@ -216,9 +218,9 @@ with tab3:
     with col5:
         st.subheader("Hobbies masculin :")
         st.pyplot(fig6)
-        st.metric(value=df['movies'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['movies'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col6:
         st.subheader("Hobbies féminin :")
         st.pyplot(fig5)
-        st.metric(value=df['movies'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        st.metric(value=df2['movies'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")

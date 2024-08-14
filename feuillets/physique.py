@@ -23,6 +23,8 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
+df2 = df.groupby(['age', 'gender', 'race'])['iid'].value_counts().reset_index()
+
 adresses = pd.read_csv('adresses.csv', sep=';')
 
 st.markdown("## <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)
@@ -33,15 +35,15 @@ tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Graphique des âges***]", "##### 
 with tab1:
     st.divider()
     st.subheader("""Graphique des âges :""")
-    age_gender = df.groupby('age')['gender'].value_counts().reset_index()
+    age_gender = df2.groupby('age')['gender'].value_counts().reset_index()
     age_gender['gender'] = age_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors="gender"
     st.bar_chart(age_gender, x="age", y="count", color=colors, stack=False, use_container_width=True)
     col1, col2 = st.columns(2, gap='large')
     with col1:
-        st.metric(value=df['age'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
+        st.metric(value=df2['age'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     with col2:
-        st.metric(value=df['age'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
+        st.metric(value=df2['age'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
     expander = st.expander("A noter")
     expander.write('''
         Si on regarde par tranche d’âge, ce sont les femmes qui utilisent le plus l'application, 
@@ -50,26 +52,25 @@ with tab1:
     ''')
 
 # race féminine
-race = df.groupby('race', dropna=True)['gender'].value_counts().reset_index()
+race = df2.groupby('race', dropna=True)['gender'].value_counts().reset_index()
 race.race = race.race.map(Races)
-race = race[race.gender == 0]
-race = race.drop('gender', axis=1)
-race.sort_values('count', ascending=True, inplace=True)
+
+race_female = race[race.gender == 0]
+race_female = race_female.drop('gender', axis=1)
+race_female.sort_values('count', ascending=True, inplace=True)
 color = sns.color_palette("bright")
 explode = (0, 0, 0, 0, 0.1)
 fig1, ax1 = plt.subplots()
-ax1.pie(race['count'], explode=explode, labels=race.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
+ax1.pie(race_female['count'], explode=explode, labels=race_female.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
 ax1.axis('equal')
 
 # race masculine
-race = df.groupby('race', dropna=True)['gender'].value_counts().reset_index()
-race.race = race.race.map(Races)
-race = race[race.gender == 1]
-race = race.drop('gender', axis=1)
-race.sort_values('count', ascending=True, inplace=True)
+race_male = race[race.gender == 1]
+race_male = race_male.drop('gender', axis=1)
+race_male.sort_values('count', ascending=True, inplace=True)
 explode = (0, 0, 0, 0, 0.1)
 fig2, ax2 = plt.subplots()
-ax2.pie(race['count'], explode=explode, labels=race.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
+ax2.pie(race_male['count'], explode=explode, labels=race_male.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
 ax2.axis('equal')
 
 
@@ -79,12 +80,12 @@ with tab2:
     with col1:
         st.subheader("Répartition des races de la gente féminine :")
         st.pyplot(fig1)
-        st.metric(value=df['race'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
+        st.metric(value=df2['race'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
         
     with col2:
         st.subheader("Répartition des races de la gente masculine :")
         st.pyplot(fig2)
-        st.metric(value=df['race'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
+        st.metric(value=df2['race'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
 
 # carte du monde
 with tab3:

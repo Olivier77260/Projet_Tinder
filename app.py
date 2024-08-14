@@ -4,7 +4,7 @@ import pandas as pd
 @st.cache_data
 def load_data_True():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
-    df = df.dropna(subset=['from', 'race'])
+    # df = df.dropna(subset=['from', 'race'])
     df = df.drop(df[df.age==55].index)
     return df
 
