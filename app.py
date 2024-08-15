@@ -3,20 +3,14 @@ import pandas as pd
 
 @st.cache_data
 def load_data_True():
-    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
-    # df = df.dropna(subset=['from', 'race'])
-    # indexNames = df[df["age"] <= 40].index
-    # df.drop(indexNames, inplace=True)
-    # df = df.drop(df[df.age<=55].index)
-    # indexNames = df[(df["age"] >= 37) & (df["age"] <= 18)].index
-    # # Delete these row indexes from dataFrame
-    # df = df.drop(indexNames)
-
-    return df[(df["age"] < 37) & (df["age"] > 18)]
+    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
+    df.dropna(subset=['from', 'goal'], how='all', inplace=True)
+    df =df[(df["age"] < 37) & (df["age"] > 18)].reset_index()
+    return df
 
 @st.cache_data
 def load_data_False():
-    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252")
+    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
     return df
 
 def main():
@@ -58,6 +52,7 @@ def main():
     attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="⏱️")
     speed_dating = st.Page("feuillets/speed_dating.py", title="2 - Speed Dating", icon="🎈")
     premier_rdv = st.Page("feuillets/first_rdv.py", title="3 - Premier rendez-vous", icon="🎉")
+    deuxieme_rdv = st.Page("feuillets/second_rdv.py", title="3 - deuxiéme rendez-vous", icon="🎉")
     
     pages = {
         "🏠 Préambule": [preambule, projet, objectif, portee,],
@@ -65,7 +60,7 @@ def main():
         "🛠️ Analyse des données": [exploration,],
         "🌍 Profil des participants": [physique, social,],
         "🌈 Habitudes de vie des participants": [habitudes,],
-        "👩‍🚀 Expérimentation": [attentes, speed_dating, premier_rdv,],
+        "👩‍🚀 Expérimentation": [attentes, speed_dating, premier_rdv, deuxieme_rdv,],
     }
     
     pg = st.navigation(pages)

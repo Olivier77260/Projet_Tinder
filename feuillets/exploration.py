@@ -48,10 +48,14 @@ with tab2:
 with tab3:
     st.divider()
     in_null = df.isnull().sum()
+    non_conforme = str(df['attr1_1'][df.wave == 9].max())
     st.dataframe(in_null, width=160)
     st.subheader("Beaucoup de données sont manquantes et demanderont une attention particulière.")
-    st.subheader("Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave, ce qui posera un problème lors de calculs.")
-    
+    st.subheader("""Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave. Les waves de 6 à 9 sont évaluées en fonction d'une échelle allant de 1 à 10."""
+                 """ Alors que les waves de 1 à 5 et de 10 à 21 ont 100 points à répartir entre les différents attributs.""")
+    st.subheader('Donc il faudra bien les séparer lors des différents calculs.')
+    st.subheader('Certaines wave de 6 à 9 ne respectent pas la notation de 1 à 10 et seront simplement exclut des calcul car non conforme à la base de notation.')
+    st.metric(value=non_conforme, label="Exemple de valeur non conforme")
 
 
 with tab4:
