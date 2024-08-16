@@ -22,7 +22,7 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-df2 = df.groupby(['go_out', 'gender', 'date', 'age', 'imprace', 'imprelig'])['iid'].value_counts().reset_index()
+df2 = df.groupby(['go_out', 'gender', 'date', 'age', 'imprace', 'imprelig'], dropna=False)['iid'].value_counts().reset_index()
 
 st.markdown("## <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
 

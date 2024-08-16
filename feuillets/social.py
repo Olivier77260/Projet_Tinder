@@ -1,7 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pandas as pd
 
 def student(x):
     if x == 1.0:
@@ -86,7 +85,7 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-df2 = df.groupby(['sports','tvsports','exercise','dining','museums','art', 'hiking','gaming','clubbing','reading','tv','theater','movies','music','shopping','yoga','concerts', 'gender', 'career_c', 'field_cd'])['iid'].value_counts().reset_index()
+df2 = df.groupby(['sports','tvsports','exercise','dining','museums','art', 'hiking','gaming','clubbing','reading','tv','theater','movies','music','shopping','yoga','concerts', 'gender', 'career_c', 'field_cd'], dropna=False)['iid'].value_counts().reset_index()
 
 st.markdown("## <font color='tomato'><ins>**PROFIL SOCIAL**</ins></font>", unsafe_allow_html=True)
 
@@ -130,8 +129,9 @@ fig2, ax2 = plt.subplots()
 ax2.pie(etude_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=120, pctdistance=0.9)
 ax2.axis('equal')
 
+# affichage des études
 with tab1:
-    # affichage des études
+    
     st.divider()
     col1, col2 = st.columns(2, gap='medium')
     with col1:        
@@ -183,7 +183,7 @@ fig4, ax4 = plt.subplots()
 ax4.pie(carriere_female, explode=explode, labels=labels, autopct="%0.0f%%", shadow=True, startangle=180, pctdistance=0.8)
 ax4.axis('equal')
 
-# affichage des études
+# affichage des professions
 with tab2:
     st.divider()
     col3, col4 = st.columns(2, gap='medium')

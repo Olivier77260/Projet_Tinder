@@ -23,8 +23,7 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-df2 = df.groupby(['age', 'gender', 'race'])['iid'].value_counts().reset_index()
-
+df2 = df.groupby(['age', 'gender', 'race'], dropna=False)['iid'].value_counts().reset_index()
 
 adresses = pd.read_csv('adresses.csv', sep=';')
 

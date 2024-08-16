@@ -1,6 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -39,7 +38,7 @@ def quality(x):
 
 @st.cache_data
 def load_data_df3(df):
-    df2 = df.groupby(['exphappy', 'gender', 'age', 'goal', 'attr1_1','shar1_1','sinc1_1','intel1_1','fun1_1','amb1_1'])['iid'].value_counts().reset_index()
+    df2 = df.groupby(['wave', 'exphappy', 'gender', 'age', 'goal', 'attr1_1','shar1_1','sinc1_1','intel1_1','fun1_1','amb1_1'], dropna=False)['iid'].value_counts().reset_index()
     return df2
 
 df2 = load_data_df3(df)
@@ -130,20 +129,9 @@ with tab2:
     )
     # qualité noteé dans les waves de 1 à 5 et de 10 à 21, les waves 6 à 9 sont non conformes à la notation demandée.
     st.write("L'age selectionné est ", age, "ans")
-    wave1a5_10a21 = df[(df['wave'] <= 5) | (df['wave'] >=10)]
+    wave1a5_10a21 = df2[(df2['wave'] <= 5) | (df2['wave'] >=10)]
     wave1a5_10a21 = wave1a5_10a21.fillna(0)
-    research = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['fun1_1'].mean().reset_index(name='fun1_1').sort_values(ascending=True, by='iid')
-    amb1_1 = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['amb1_1'].mean().reset_index(name='amb1_1').sort_values(ascending=True, by='iid')
-    research.insert(loc=len(research.columns), column='amb1_1', value=amb1_1['amb1_1'])
-    shar1_1 = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['shar1_1'].mean().reset_index(name='shar1_1').sort_values(ascending=True, by='iid')
-    research.insert(loc=len(research.columns), column='shar1_1', value=shar1_1['shar1_1'])
-    sinc1_1 = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['sinc1_1'].mean().reset_index(name='sinc1_1').sort_values(ascending=True, by='iid')
-    research.insert(loc=len(research.columns), column='sinc1_1', value=sinc1_1['sinc1_1'])
-    intel1_1 = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['intel1_1'].mean().reset_index(name='intel1_1').sort_values(ascending=True, by='iid')
-    research.insert(loc=len(research.columns), column='intel1_1', value=intel1_1['intel1_1'])
-    attr1_1 = wave1a5_10a21.groupby(['wave', 'age', 'iid', 'gender'])['attr1_1'].mean().reset_index(name='attr1_1').sort_values(ascending=True, by='iid')
-    research.insert(loc=len(research.columns), column='attr1_1', value=attr1_1['attr1_1'])
-    list_search = research.groupby(['gender', (research.age == age)]).aggregate({'attr1_1':'mean','shar1_1':'mean','sinc1_1':'mean','intel1_1':'mean','fun1_1':'mean','amb1_1':'mean'}).reset_index()
+    list_search = wave1a5_10a21.groupby(['gender', (wave1a5_10a21.age == age)]).aggregate({'attr1_1':'mean','shar1_1':'mean','sinc1_1':'mean','intel1_1':'mean','fun1_1':'mean','amb1_1':'mean'}).reset_index()
     list_search = list_search[list_search.age == True]    
     # affichage qualités
     col3, col4 = st.columns(2, gap='medium')
@@ -170,6 +158,7 @@ with tab2:
             ax3.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax3.axis('equal')
             st.pyplot(fig3)
+        st.metric(value=df2['attr1_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col4:
         # Qualités recherchées par les hommes
@@ -193,6 +182,7 @@ with tab2:
             ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax4.axis('equal')
             st.pyplot(fig4)
+        st.metric(value=df2['attr1_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 with tab3:
     st.subheader("Espoir d'être heureux avec les personnes rencontrées lors de l'événement de speed_dating")
@@ -202,4 +192,9 @@ with tab3:
     happy_gender['gender'] = happy_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors = "gender"
     st.bar_chart(happy_gender, x="exphappy", y="count", x_label="Espoir d'une rencontre heureuse", color=colors, stack=False, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(value=df2['exphappy'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
+    with col2:
+        st.metric(value=df2['exphappy'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
     st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur aprés cette soirée.""")
