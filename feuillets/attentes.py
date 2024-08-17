@@ -1,11 +1,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+from fonctions import list_age
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
 else:
     df = st.session_state.dfFalse
 
+@st.cache_data
 def Objects(x):
     if x == 1.0:
         size = "Passer une agréable soirée"
@@ -21,6 +23,7 @@ def Objects(x):
         size = "Autre"
     return size
 
+@st.cache_data
 def quality(x):
     if x == 'attr1_1':
         size = "Attractive"
@@ -37,25 +40,21 @@ def quality(x):
     return size
 
 @st.cache_data
-def load_data_df3(df):
+def load_data_wait(df):
     df2 = df.groupby(['wave', 'exphappy', 'gender', 'age', 'goal', 'attr1_1','shar1_1','sinc1_1','intel1_1','fun1_1','amb1_1'], dropna=False)['iid'].value_counts().reset_index()
     return df2
-
-df2 = load_data_df3(df)
 
 st.markdown("## <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Objectifs***]", "##### :blue[***2. Les qualités recherchées***]", "##### :blue[***3. Leurs espoirs***]"])
-
-list_age = df2['age'].value_counts()
-list_age = list_age.index.sort_values(ascending=True)
+df2 = load_data_wait(df)
 with tab1:
     st.subheader("Principal objectif des participants à cet événement")
     st.divider()
     # listing des ages
     age = st.select_slider(
     "Selectionner l'age",
-    options=list_age,
+    options=list_age(df),
     key="attente",
     value=25,
     )
@@ -63,7 +62,7 @@ with tab1:
     objectifs = df2.groupby(['goal', (df2.age == age)], dropna=True)['gender'].value_counts().reset_index()
     objectifs = objectifs[objectifs.age == True]
     objectifs['gender'] = objectifs['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
-    # affichage objectif    
+ 
     col1, col2 = st.columns(2, gap='medium')
     with col1:
         # objectif des hommes
@@ -123,7 +122,7 @@ with tab2:
     # listing des ages
     age = st.select_slider(
     "Selectionner l'age",
-    options=list_age,
+    options=list_age(df),
     key="qualite",
     value=25,
     )
@@ -177,7 +176,6 @@ with tab2:
                 explode.append(0)
             explode.append(0.1)
             fig4, ax4 = plt.subplots()
-
             st.subheader("Hommes")            
             ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax4.axis('equal')

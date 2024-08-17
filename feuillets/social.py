@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+@st.cache_data
 def student(x):
     if x == 1.0:
         size = "Law"
@@ -41,6 +42,7 @@ def student(x):
         size = "Other"
     return size
 
+@st.cache_data
 def ProfilSociaux(x):
     if x == 1.0:
         size = "Lawyer"

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
+@st.cache_data
 def Races(x):
     if x == 1.0:
         size = "Black/African American"

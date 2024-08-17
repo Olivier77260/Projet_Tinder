@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from fonctions import delta
 
 @st.cache_data
 def load_data_True():
@@ -21,7 +22,7 @@ def main():
         st.session_state.del_from = False
 
     st.session_state.dfTrue = load_data_True()
-    st.session_state.dfFalse = load_data_False()
+    st.session_state.dfFalse = load_data_False()    
 
     with st.sidebar:
         manque = st.radio(
@@ -29,11 +30,11 @@ def main():
         ["Non", "Oui"],
         horizontal=True,
         )
-
-    if manque == "Non":
-        st.session_state.del_from = False
-    else:
-        st.session_state.del_from = True
+        if manque == "Non":
+            st.session_state.del_from = False            
+        else:
+            st.session_state.del_from = True
+            st.metric(value=delta(st.session_state.dfTrue), label="Nombre de personnes supprimées :")        
     
     preambule = st.Page("feuillets/preambule.py", title="1 - Préambule", icon="📇", default=True)
     projet = st.Page("feuillets/projet.py", title="2 - Projet", icon="🚧", default=False)

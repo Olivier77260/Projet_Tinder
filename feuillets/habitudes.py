@@ -1,5 +1,7 @@
 import streamlit as st
+from fonctions import list_age
 
+@st.cache_data
 def Frequence2(x):
     if x == 1:
         size = "1_Several times a week"
@@ -60,16 +62,12 @@ with tab1:
         En oposition avec les rendez-vous.
     ''')
 
-# listing des ages
-list_age = df2['age'].value_counts()
-list_age = list_age.index.sort_values(ascending=True) 
-
 # affichage race
 with tab2:
     st.divider()   
     age_race = st.select_slider(
     "Selectionner l'age",
-    options=list_age,
+    options=list_age(df),
     key="race",
     value=25,
     )
@@ -91,7 +89,7 @@ with tab3:
     st.divider()   
     age_religion = st.select_slider(
     "Selectionner l'age",
-    options=list_age,
+    options=list_age(df),
     key="religion",
     value=25,
     )

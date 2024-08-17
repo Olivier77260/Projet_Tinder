@@ -1,10 +1,17 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+from fonctions import nb_participant
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
 else:
     df = st.session_state.dfFalse
+
+@st.cache_data
+def age_gender(genre, df):
+    age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
+    age_gender = age_gender.loc[age_gender['gender'] == genre]
+    return age_gender
 
 st.markdown("## <font color='tomato'><ins>**ANALYSE DES DONNEES**</ins></font>", unsafe_allow_html=True)
 
@@ -37,8 +44,7 @@ with tab1:
 
 # noms des colonnes
 with tab2:
-    nb_participant = str(df['iid'].max())
-    st.subheader("Le nombre de participants à cette enquête est de " + nb_participant + " personnes, déterminé par la colonne iid suivant la note explicative, ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde.")
+    st.subheader("Le nombre de participants à cette enquête est de " + str(nb_participant(df)) + " personnes, déterminé par la colonne iid suivant la note explicative, ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde.")
 
     st.subheader("Le nom des colonnes n'étant pas très explicite, la documentation fournie nous sera d'une grande aide.")
     st.write('Nom des colonnes')
@@ -63,15 +69,16 @@ with tab3:
 # ages
 with tab4:
     st.subheader("Profil des ages masculins et féminins de nos participants")
-    age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
-
-    age_gender_female = age_gender.loc[age_gender['gender'] == 0]
+    # age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
+    # age_gender_female = age_gender.loc[age_gender['gender'] == 0]
+    age_gender_female = age_gender(0, df)
     fig1, ax1 = plt.subplots()
     ax1.set_ylabel('age')
     ax1.set_title('Outlier des ages féminins')
     ax1.boxplot(age_gender_female['age'], 0, 'gD', patch_artist=True, boxprops={'facecolor': 'bisque'}, widths=0.5)
 
-    age_gender_male = age_gender.loc[age_gender['gender'] == 1]
+    # age_gender_male = age_gender.loc[age_gender['gender'] == 1]
+    age_gender_male = age_gender(1, df)
     fig2, ax2 = plt.subplots()
     ax2.set_ylabel('age')
     ax2.set_title('Outlier des ages masculins')

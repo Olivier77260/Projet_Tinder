@@ -1,6 +1,8 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+from fonctions import list_age
 
+@st.cache_data
 def quality_o(x):
     if x == 'attr2_1':
         size = "Attractive"
@@ -16,16 +18,17 @@ def quality_o(x):
         size = "Has shared interests/hobbies"
     return size
 
+@st.cache_data
 def quality_pf_o(x):
-    if x == 'pf_o_att':
+    if x == 'attr':
         size = "Attractive"
-    elif x == 'pf_o_sin':
+    elif x == 'sinc':
         size = "Sincere"
-    elif x == 'pf_o_int':
+    elif x == 'intel':
         size = "Intelligent"
-    elif x == 'pf_o_fun':
+    elif x == 'fun':
         size = "Fun"
-    elif x == 'pf_o_amb':
+    elif x == 'amb':
         size = "Ambitious"
     else:
         size = "Has shared interests/hobbies"
@@ -36,19 +39,16 @@ if st.session_state.del_from:
 else:
     df = st.session_state.dfFalse
 
-df2 = df.groupby(['wave', 'dec_o', 'exphappy', 'gender', 'age', 'goal', 'attr2_1','shar2_1','sinc2_1','intel2_1','fun2_1','amb2_1'], dropna=False)['iid'].value_counts().reset_index()
-df3 = df.groupby(['dec_o', 'exphappy', 'gender', 'age', 'goal', 'pf_o_amb', 'pf_o_att', 'pf_o_fun', 'pf_o_int', 'pf_o_sha', 'pf_o_sin'], dropna=False)['iid'].value_counts().reset_index()
+df2 = df.groupby(['wave', 'dec', 'exphappy', 'gender', 'age', 'goal', 'attr2_1','shar2_1','sinc2_1','intel2_1','fun2_1','amb2_1'], dropna=False)['iid'].value_counts().reset_index()
+df3 = df.groupby(['dec', 'exphappy', 'gender', 'age', 'goal', 'amb', 'attr', 'fun', 'intel', 'shar', 'sinc'], dropna=False)['iid'].value_counts().reset_index()
 
 st.markdown("## <font color='tomato'><ins>**SPEED DATING**</ins></font>", unsafe_allow_html=True)
 
 st.subheader("Le speed dating est un rendez-vous d'une durée d'environ 4 mn avec le partenaire selectionné.")
 
-list_age = df2['age'].value_counts()
-list_age = list_age.index.sort_values(ascending=True)
-
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Qualités recherchées***]", "##### :blue[***2. qualités attribuées par hommes***]", "##### :blue[***3. qualités attribuées par les femmes***]"])
 # slider de selection de l'age
-age = st.select_slider("Selectionner l'age", options=list_age, key="attribution_bad", value=25)
+age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
 
 # affichage qualités
 with tab1:
@@ -81,7 +81,8 @@ with tab1:
             ax3.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax3.axis('equal')
             st.pyplot(fig3)
-            st.metric(value=df2['attr2_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+            expander2 = st.expander("Valeurs manquantes :")
+            expander2.metric(value=df2['attr2_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         # Qualités recherchées par les hommes
@@ -103,16 +104,17 @@ with tab1:
             ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax4.axis('equal')
             st.pyplot(fig4)
-            st.metric(value=df2['attr2_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+            expander2 = st.expander("Valeurs manquantes :")
+            expander2.metric(value=df2['attr2_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
-preference_positive = df3[(df3.dec_o == 1)]
-preference_positive = preference_positive.fillna(0)
-research_good = preference_positive.groupby(['gender', (preference_positive.age == age)]).aggregate({'pf_o_att':'mean','pf_o_sin':'mean','pf_o_int':'mean','pf_o_fun':'mean','pf_o_amb':'mean','pf_o_sha':'mean'}).reset_index()
+preference_positive = df[(df.dec == 1)]
+preference_positive = preference_positive.fillna(df.median(numeric_only=True))
+research_good = preference_positive.groupby(['gender', (preference_positive.age == age)]).aggregate({'attr':'median','sinc':'median','intel':'median','fun':'median','amb':'median','shar':'median'}).reset_index()
 research_good = research_good[research_good.age == True] 
 
-preference_negative = df3[(df3.dec_o == 0)]
-preference_negative = preference_negative.fillna(0)
-research_bad = preference_negative.groupby(['gender', (preference_negative.age == age)]).aggregate({'pf_o_att':'mean','pf_o_sin':'mean','pf_o_int':'mean','pf_o_fun':'mean','pf_o_amb':'mean','pf_o_sha':'mean'}).reset_index()
+preference_negative = df[(df.dec == 0)]
+preference_negative = preference_negative.fillna(df.median(numeric_only=True))
+research_bad = preference_negative.groupby(['gender', (preference_negative.age == age)]).aggregate({'attr':'median','sinc':'median','intel':'median','fun':'median','amb':'median','shar':'median'}).reset_index()
 research_bad = research_bad[research_bad.age == True]
 
 #affichage qualités des hommes
@@ -133,16 +135,17 @@ with tab2:
             list_search_bad_male.sort_values(ascending=True, by=0, axis=1, inplace=True)     
             list_search_bad_male_label = list_search_bad_male.columns.map(quality_pf_o)             
             list_search_bad_male = list_search_bad_male.squeeze()
-            explode = list()            
+            explode = list()
+            explode.append(0.1)
             for i in range(len(list_search_bad_male)-1):
-                explode.append(0)
-            explode.append(0.1)         
+                explode.append(0)            
             fig1, ax1 = plt.subplots()
             st.subheader("Envers les femmes sans suite de rendez-vous")
             ax1.pie(list_search_bad_male, explode=explode, labels=list_search_bad_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax1.axis('equal')
             st.pyplot(fig1)
-            st.metric(value=df3['pf_o_att'][df3.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+            expander2 = st.expander("Valeurs manquantes :")
+            expander2.metric(value=df3['attr'][df3.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     # qualités attibuées avec rdv
     with col4:
@@ -161,13 +164,12 @@ with tab2:
             explode = list()            
             for i in range(len(list_search_good_male)-1):
                 explode.append(0)
-            explode.append(0.1)
+            explode.append(0.1)            
             fig5, ax5 = plt.subplots()
             st.subheader("Envers les femmes avec rendez-vous")
             ax5.pie(list_search_good_male, explode=explode, labels=list_search_good_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax5.axis('equal')
             st.pyplot(fig5)
-            st.metric(value=df3['pf_o_att'][df3.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 #affichage qualités des femmes
 with tab3:
@@ -186,16 +188,18 @@ with tab3:
             list_search_female.sort_values(ascending=True, by=0, axis=1, inplace=True)     
             list_search_female_label = list_search_female.columns.map(quality_pf_o)        
             list_search_female = list_search_female.squeeze()
-            explode = list()            
-            for i in range(len(list_search_female)-1):
-                explode.append(0)
+            explode = list()
             explode.append(0.1)
+            for i in range(len(list_search_female)-1):
+                explode.append(0)            
             fig6, ax6 = plt.subplots()
             st.subheader("Envers les hommes sans suite de rendez-vous")
             ax6.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax6.axis('equal')
             st.pyplot(fig6)
-            st.metric(value=df3['pf_o_att'][df3.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+            expander2 = st.expander("Valeurs manquantes :")
+            expander2.metric(value=df3['attr'][df3.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+            
 
     with col4:
             # Attribution des qualités par les femmes avec rendez-vous
@@ -218,4 +222,3 @@ with tab3:
                 ax2.pie(list_search_female_good, explode=explode, labels=list_search_female_good_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
                 ax2.axis('equal')
                 st.pyplot(fig2)
-                st.metric(value=df3['pf_o_att'][df3.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
