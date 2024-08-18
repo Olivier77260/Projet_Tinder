@@ -51,3 +51,17 @@ race_female.sort_values(by="count", ascending=False, inplace=True)
 religion_female = religion[religion.gender == 0].set_index('imprelig')
 religion_female = religion_female.drop('gender', axis=1)
 religion_female.sort_values(by="count", ascending=False, inplace=True)
+
+# Nuage de point
+import altair as alt
+
+c = (
+    alt.Chart(df3)
+    .mark_circle()
+    .encode(x="age", y="match", color="gender", tooltip=["age", "match", "gender"])
+)
+
+st.write(c)
+
+:mailbox_with_mail:
+:iphone:

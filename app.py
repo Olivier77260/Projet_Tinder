@@ -1,18 +1,5 @@
 import streamlit as st
-import pandas as pd
-from fonctions import delta
-
-@st.cache_data
-def load_data_True():
-    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
-    df.dropna(subset=['from', 'goal'], how='all', inplace=True)
-    df =df[(df["age"] < 37) & (df["age"] > 18)].reset_index()
-    return df
-
-@st.cache_data
-def load_data_False():
-    df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
-    return df
+from fonctions import delta, load_data_True, load_data_False
 
 def main():
     st.set_page_config(page_title="Tinder", page_icon="👩‍❤️‍👨", layout="wide", initial_sidebar_state="auto")
@@ -34,7 +21,7 @@ def main():
             st.session_state.del_from = False            
         else:
             st.session_state.del_from = True
-            st.metric(value=delta(st.session_state.dfTrue), label="Nombre de personnes supprimées :")        
+            st.metric(value=delta(st.session_state.dfTrue), label="Nombre de personnes supprimées :")    
     
     preambule = st.Page("feuillets/preambule.py", title="1 - Préambule", icon="📇", default=True)
     projet = st.Page("feuillets/projet.py", title="2 - Projet", icon="🚧", default=False)

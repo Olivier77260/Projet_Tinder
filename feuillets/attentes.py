@@ -47,17 +47,12 @@ def load_data_wait(df):
 st.markdown("## <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Objectifs***]", "##### :blue[***2. Les qualités recherchées***]", "##### :blue[***3. Leurs espoirs***]"])
+
 df2 = load_data_wait(df)
-with tab1:
-    st.subheader("Principal objectif des participants à cet événement")
-    st.divider()
-    # listing des ages
-    age = st.select_slider(
-    "Selectionner l'age",
-    options=list_age(df),
-    key="attente",
-    value=25,
-    )
+with tab1:    
+    tab1.subheader("Principal objectif des participants à cet événement")
+    tab1.divider()
+    age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente1", value=25,)      
     st.write("L'age selectionné est ", age, "ans")
     objectifs = df2.groupby(['goal', (df2.age == age)], dropna=True)['gender'].value_counts().reset_index()
     objectifs = objectifs[objectifs.age == True]
@@ -88,7 +83,8 @@ with tab1:
             ax1.axis('equal') 
             st.subheader("Hommes")
             st.pyplot(fig1)
-        st.metric(value=df2['goal'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander1 = st.expander("Valeurs manquantes :")
+        expander1.metric(value=df2['goal'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         # objectif des femmes
@@ -114,18 +110,13 @@ with tab1:
             ax2.axis('equal')
             st.subheader("Femmes")
             st.pyplot(fig2)
-        st.metric(value=df2['goal'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander2 = st.expander("Valeurs manquantes :")
+        expander2.metric(value=df2['goal'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 with tab2:
-    st.subheader("Qualités recherchées chez le sexe opposé.")
+    tab2.subheader("Qualités recherchées chez le sexe opposé.")
     st.divider()
-    # listing des ages
-    age = st.select_slider(
-    "Selectionner l'age",
-    options=list_age(df),
-    key="qualite",
-    value=25,
-    )
+    age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente2", value=25,)
     # qualité noteé dans les waves de 1 à 5 et de 10 à 21, les waves 6 à 9 sont non conformes à la notation demandée.
     st.write("L'age selectionné est ", age, "ans")
     wave1a5_10a21 = df2[(df2['wave'] <= 5) | (df2['wave'] >=10)]
@@ -156,8 +147,10 @@ with tab2:
             st.subheader("Femmes")
             ax3.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax3.axis('equal')
-            st.pyplot(fig3)
-        st.metric(value=df2['attr1_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+            st.pyplot(fig3)            
+        expander3 = st.expander("Valeurs manquantes :")
+        expander3.metric(value=df2['attr1_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+    
 
     with col4:
         # Qualités recherchées par les hommes
@@ -179,20 +172,25 @@ with tab2:
             st.subheader("Hommes")            
             ax4.pie(list_search_male, explode=explode, labels=list_search_male_label, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax4.axis('equal')
-            st.pyplot(fig4)
-        st.metric(value=df2['attr1_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+            st.pyplot(fig4)        
+        expander4 = st.expander("Valeurs manquantes :")
+        expander4.metric(value=df2['attr1_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 with tab3:
-    st.subheader("Espoir d'être heureux avec les personnes rencontrées lors de l'événement de speed_dating")
+    tab3.subheader("L'espoir d'être heureux avec les personnes rencontrées lors de l'événement de speed_dating")
     st.divider()
-    
     happy_gender = df2.groupby('exphappy', dropna=True)['gender'].value_counts().reset_index()
     happy_gender['gender'] = happy_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors = "gender"
     st.bar_chart(happy_gender, x="exphappy", y="count", x_label="Espoir d'une rencontre heureuse", color=colors, stack=False, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(value=df2['exphappy'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
-    with col2:
-        st.metric(value=df2['exphappy'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
-    st.subheader("""Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur aprés cette soirée.""")
+    expander5 = tab3.expander("Valeurs manquantes :")
+    expander5.metric(value=df2['exphappy'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
+    expander5.metric(value=df2['exphappy'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
+
+txt = st.text_area(
+    "#### **Interprétation :**",
+    "Les attentes des participants sont surtout de passer une agréable soirée. "
+    "Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur après cette soirée. ",)
+st.divider()
+expander = st.expander("considérations :")
+expander.write("Sur une échelle de 1 à 10 est noté l'espoir d'être heureux avec les personnes rencontrées.")     

@@ -44,8 +44,6 @@ df3 = df.groupby(['dec', 'exphappy', 'gender', 'age', 'goal', 'amb', 'attr', 'fu
 
 st.markdown("## <font color='tomato'><ins>**SPEED DATING**</ins></font>", unsafe_allow_html=True)
 
-st.subheader("Le speed dating est un rendez-vous d'une durée d'environ 4 mn avec le partenaire selectionné.")
-
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Qualités recherchées***]", "##### :blue[***2. qualités attribuées par hommes***]", "##### :blue[***3. qualités attribuées par les femmes***]"])
 # slider de selection de l'age
 age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
@@ -144,8 +142,6 @@ with tab2:
             ax1.pie(list_search_bad_male, explode=explode, labels=list_search_bad_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax1.axis('equal')
             st.pyplot(fig1)
-            expander2 = st.expander("Valeurs manquantes :")
-            expander2.metric(value=df3['attr'][df3.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     # qualités attibuées avec rdv
     with col4:
@@ -170,13 +166,15 @@ with tab2:
             ax5.pie(list_search_good_male, explode=explode, labels=list_search_good_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax5.axis('equal')
             st.pyplot(fig5)
+    expander2 = tab2.expander("Valeurs manquantes :")
+    expander2.metric(value=df3['attr'][df3.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 #affichage qualités des femmes
 with tab3:
     st.subheader("Attribution des qualités par les femmes suite au speed dating.")
     st.write("L'age selectionné est ", age, "ans")
-    col3, col4 = st.columns(2, gap='medium')
-    with col3:
+    col5, col6 = st.columns(2, gap='medium')
+    with col5:
         # Attribution des qualités par les femmes sans rendez-vous
         list_search_female = research_bad[research_bad['gender'] == 0].reset_index()
         list_search_female = list_search_female.drop('gender', axis=1)
@@ -196,12 +194,9 @@ with tab3:
             st.subheader("Envers les hommes sans suite de rendez-vous")
             ax6.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax6.axis('equal')
-            st.pyplot(fig6)
-            expander2 = st.expander("Valeurs manquantes :")
-            expander2.metric(value=df3['attr'][df3.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
-            
+            st.pyplot(fig6, clear_figure=True)            
 
-    with col4:
+    with col6:
             # Attribution des qualités par les femmes avec rendez-vous
             list_search_female_good = research_good[research_good['gender'] == 0].reset_index()
             list_search_female_good = list_search_female_good.drop('gender', axis=1)
@@ -221,4 +216,17 @@ with tab3:
                 st.subheader("Envers les hommes avec rendez-vous")
                 ax2.pie(list_search_female_good, explode=explode, labels=list_search_female_good_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
                 ax2.axis('equal')
-                st.pyplot(fig2)
+                st.pyplot(fig2, clear_figure=True)
+
+    expander2 = tab3.expander("Valeurs manquantes :")
+    expander2.metric(value=df3['attr'][df3.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+    
+txt = st.text_area(
+    "#### **Interprétation :**",
+    "Les qualités recherchées, en majorité par les hommes et les femmes avant les rendez-vous, sont l'attractivité. "
+    "A l'issu de ces speed dating les qualités attribuées, que ce soit par les femmes ou les hommes, deviennent beaucoup plus équilibrées. "
+    "On voit que rien ne permet clairement d'identifier pourquoi une suite est donnée avec un rendez-vous.",)
+st.divider()
+expander = st.expander("considérations :")
+expander.write("Le speed dating est un rendez-vous d'une durée d'environ 4 mn avec le partenaire selectionné.")
+

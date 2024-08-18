@@ -133,18 +133,18 @@ ax2.axis('equal')
 
 # affichage des études
 with tab1:
-    
-    st.divider()
     col1, col2 = st.columns(2, gap='medium')
     with col1:        
         st.subheader("Domaine d'études masculin :")
         st.pyplot(fig1)
-        st.metric(value=df2['field_cd'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander6 = st.expander("Valeurs manquantes :")
+        expander6.metric(value=df2['field_cd'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         st.subheader("Domaine d'études féminin :")
         st.pyplot(fig2)
-        st.metric(value=df2['field_cd'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander7 = st.expander("Valeurs manquantes :")
+        expander7.metric(value=df2['field_cd'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 # professions
 carriere = df2.groupby('career_c', dropna=True)['gender'].value_counts().reset_index()
@@ -187,22 +187,18 @@ ax4.axis('equal')
 
 # affichage des professions
 with tab2:
-    st.divider()
     col3, col4 = st.columns(2, gap='medium')
     with col3:
         st.subheader("Métiers masculin :")
         st.pyplot(fig3)
-        st.metric(value=df2['career_c'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander1 = st.expander("Valeurs manquantes :")
+        expander1.metric(value=df2['career_c'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col4:
         st.subheader("Métiers féminin :")
         st.pyplot(fig4)
-        st.metric(value=df2['career_c'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
-
-    expander = st.expander("A noter")
-    expander.write('''
-        Ce sont surtout les métiers dits intellectuels qui sont les plus représentés.
-    ''')
+        expander2 = st.expander("Valeurs manquantes :")
+        expander2.metric(value=df2['career_c'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 # Hobbies
 hobbies = df2.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports':'sum','exercise':'sum','dining':'sum','museums':'sum','art':'sum', 'hiking':'sum','gaming':'sum','clubbing':'sum','reading':'sum','tv':'sum','theater':'sum','movies':'sum','music':'sum','shopping':'sum','yoga':'sum','concerts':'sum'})
@@ -224,15 +220,21 @@ ax6.pie(hobbies_male, labels=hobbies_male.index, autopct='%0.0f%%', shadow=True,
 ax6.axis('equal')
 
 with tab3:
-    st.divider()
     # affichage des hobbies
     col5, col6 = st.columns(2, gap='medium')
     with col5:
         st.subheader("Hobbies masculin :")
         st.pyplot(fig6)
-        st.metric(value=df2['movies'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander4 = st.expander("Valeurs manquantes :")
+        expander4.metric(value=df2['movies'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col6:
         st.subheader("Hobbies féminin :")
         st.pyplot(fig5)
-        st.metric(value=df2['movies'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+        expander5 = st.expander("Valeurs manquantes :")
+        expander5.metric(value=df2['movies'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+
+txt = st.text_area(
+    "#### **Interprétation :**",
+    "Les parcours de chacun sont assez diversifiés mais on retrouve surtout des métiers dit intellectuels. "
+    "Nous avons aussi un très grand panel de hobbies assez équilibré. ",)
