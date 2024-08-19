@@ -40,3 +40,67 @@ def load_data_True():
 def load_data_False():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
     return df
+
+@st.cache_data
+def quality_o(x):
+    if x == 'attr2_1':
+        size = "Attractive"
+    elif x == 'sinc2_1':
+        size = "Sincere"
+    elif x == 'intel2_1':
+        size = "Intelligent"
+    elif x == 'fun2_1':
+        size = "Fun"
+    elif x == 'amb2_1':
+        size = "Ambitious"
+    else:
+        size = "Has shared interests/hobbies"
+    return size
+
+@st.cache_data
+def quality_pf_o(x):
+    if x == 'attr':
+        size = "Attractive"
+    elif x == 'sinc':
+        size = "Sincere"
+    elif x == 'intel':
+        size = "Intelligent"
+    elif x == 'fun':
+        size = "Fun"
+    elif x == 'amb':
+        size = "Ambitious"
+    else:
+        size = "Has shared interests/hobbies"
+    return size
+
+@st.cache_data
+def quality_o_7(x):
+    if x == 'attr7_2':
+        size = "Attractive"
+    elif x == 'sinc7_2':
+        size = "Sincere"
+    elif x == 'intel7_2':
+        size = "Intelligent"
+    elif x == 'fun7_2':
+        size = "Fun"
+    elif x == 'amb7_2':
+        size = "Ambitious"
+    else:
+        size = "Has shared interests/hobbies"
+    return size
+
+@st.cache_data
+def quality_o_7_3(x):
+    if x == 'attr7_3':
+        size = "Attractive"
+    elif x == 'sinc7_3':
+        size = "Sincere"
+    elif x == 'intel7_3':
+        size = "Intelligent"
+    elif x == 'fun7_3':
+        size = "Fun"
+    elif x == 'amb7_3':
+        size = "Ambitious"
+    else:
+        size = "Has shared interests/hobbies"
+    return size

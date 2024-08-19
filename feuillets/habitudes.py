@@ -1,5 +1,6 @@
 import streamlit as st
 from fonctions import list_age
+from annotated_text import annotated_text
 
 @st.cache_data
 def Frequence2(x):
@@ -49,6 +50,11 @@ with tab1:
     with col2:
         st.subheader("Fréquence des rendez-vous.")
         st.bar_chart(sorties, x='date', y='count', stack=False, y_label="Fréquence des rendez-vous", use_container_width=True, color="gender", horizontal=True)
+        annotated_text(
+            "Male : ",
+            ("", "blue", "#4169e1"),
+            " Female : ",
+            ("", "rose", "#ff00ff"),)
         expander3 = st.expander("Valeurs manquantes :")      
         expander3.metric(value=df2['date'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
         expander3.metric(value=df2['date'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -75,6 +81,11 @@ with tab2:
     st.write("L'age selectionné est ", age_race, "ans")
     st.subheader("Importance interraciale dans une relation :")
     st.bar_chart(race, x="imprace", y="count", x_label="Importance de la race", stack=False, use_container_width=True, color="gender")
+    annotated_text(
+            "Male : ",
+            ("", "blue", "#4169e1"),
+            " Female : ",
+            ("", "rose", "#ff00ff"),)
     expander1 = st.expander("Valeurs manquantes :")      
     expander1.metric(value=df2['imprace'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander1.metric(value=df2['imprace'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -93,6 +104,11 @@ with tab3:
     st.write("L'age selectionné est ", age_religion, "ans")
     st.subheader("Importance de la religion dans une relation.")
     st.bar_chart(religion, x="imprelig", y="count", stack=False, use_container_width=True, color="gender", x_label="Importance de la religion")
+    annotated_text(
+            "Male : ",
+            ("", "blue", "#4169e1"),
+            " Female : ",
+            ("", "rose", "#ff00ff"),)
     expander2 = st.expander("Valeurs manquantes :")      
     expander2.metric(value=df2['imprelig'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander2.metric(value=df2['imprelig'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")

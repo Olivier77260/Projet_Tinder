@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+from annotated_text import annotated_text
 
 @st.cache_data
 def Races(x):
@@ -39,6 +40,11 @@ with tab1:
     age_gender['gender'] = age_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors="gender"
     st.bar_chart(age_gender, x="age", y="count", color=colors, stack=False, use_container_width=True)
+    annotated_text(
+            "Male : ",
+            ("", "blue", "#4169e1"),
+            " Female : ",
+            ("", "rose", "#ff00ff"),)
     expander1 = st.expander("Valeurs manquantes :")
     expander1.metric(value=df2['age'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander1.metric(value=df2['age'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")

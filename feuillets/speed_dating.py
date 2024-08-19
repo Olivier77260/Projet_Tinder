@@ -1,38 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from fonctions import list_age
-
-@st.cache_data
-def quality_o(x):
-    if x == 'attr2_1':
-        size = "Attractive"
-    elif x == 'sinc2_1':
-        size = "Sincere"
-    elif x == 'intel2_1':
-        size = "Intelligent"
-    elif x == 'fun2_1':
-        size = "Fun"
-    elif x == 'amb2_1':
-        size = "Ambitious"
-    else:
-        size = "Has shared interests/hobbies"
-    return size
-
-@st.cache_data
-def quality_pf_o(x):
-    if x == 'attr':
-        size = "Attractive"
-    elif x == 'sinc':
-        size = "Sincere"
-    elif x == 'intel':
-        size = "Intelligent"
-    elif x == 'fun':
-        size = "Fun"
-    elif x == 'amb':
-        size = "Ambitious"
-    else:
-        size = "Has shared interests/hobbies"
-    return size
+from fonctions import list_age, quality_o, quality_pf_o
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
