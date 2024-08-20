@@ -40,7 +40,9 @@ def main():
     attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="⏱️")
     speed_dating = st.Page("feuillets/speed_dating.py", title="2 - Speed Dating", icon="🎈")
     bilan = st.Page("feuillets/bilan.py", title="3 - Bilan du speed dating", icon="🎉")
-    second_rdv = st.Page("feuillets/second_rdv.py", title="3 - Deuxiéme rendez-vous", icon="🎉")
+    second_rdv = st.Page("feuillets/second_rdv.py", title="4 - Deuxiéme rendez-vous", icon="🎉")
+
+    conclusion = st.Page("feuillets/conclusion.py", title="- Conclusion", icon="🃏")
     
     pages = {
         "🏠 Préambule": [preambule, projet, objectif, portee,],
@@ -49,6 +51,7 @@ def main():
         "🌍 Profil des participants": [physique, social,],
         "🌈 Habitudes de vie des participants": [habitudes,],
         "👩‍🚀 Expérimentation": [attentes, speed_dating, bilan, second_rdv,],
+        "🌋 Conclusion": [conclusion,],
     }
     
     pg = st.navigation(pages)

@@ -20,11 +20,11 @@ def load_data_rdv(df):
     return df3
 
 df3 = load_data_rdv(df)
-rdv = df3[df3.gender == 0 ].sum()
-result = rdv.match
-df3['gender'] = df3['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
 
-with tab1:    
+
+with tab1:
+    st.subheader("Nombre de match obtenu en fonction de l'âge.")    
+    df3['gender'] = df3['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')    
     st.bar_chart(df3, x="age", y="match", color='gender', stack=False, use_container_width=True)
     annotated_text(
     "Male : ",
@@ -32,8 +32,8 @@ with tab1:
     " Female : ",
     ("", "rose", "#ff00ff"),)
     expander2 = st.expander("Valeurs manquantes :")
-    expander2.metric(value=df3['match'][df3.gender == 1].isnull().sum(), label="Pour les hommes.")
-    expander2.metric(value=df3['match'][df3.gender == 0].isnull().sum(), label="Pour les femmes.")
+    expander2.metric(value=df['match'][df.gender == 1].isnull().sum(), label="Pour les hommes.")
+    expander2.metric(value=df['match'][df.gender == 0].isnull().sum(), label="Pour les femmes.")
     col1, col2, col3, col4 = st.columns(4, gap="medium")
 
     with col1:
@@ -42,7 +42,13 @@ with tab1:
 
 
     with col2:
-        st.metric(value=result, label="Nombre total de rendez-vous obtenu")
+        rdv = df3[df3.gender == '#ff00ff'].sum()
+        result = rdv.match
+        st.metric(value=result, label="Nombre total de match obtenu")
+        expander = st.expander("considérations :")
+        expander.write("Il faut que les 2 participants aient décidé de se revoir pour comptabiliser un match.")
+        if 'nb_rdv' not in st.session_state:
+            st.session_state.nb_rdv = result
 
     with col3:
         pourcentage = np.round(result * 100 / Nb_total_rencontre, 2)
@@ -50,10 +56,11 @@ with tab1:
 
     with col4:
         participant = nb_participant(df)
-        pourcentage = np.round(result / participant, 2)
-        st.metric(value=pourcentage, label="Nombre de rendez-vous obtenu par participant")
+        pourcentage2 = np.round(result / participant, 2)
+        st.metric(value=pourcentage2, label="Nombre de match par participant")
 
 with tab2:
+    st.subheader("Nombre de match obtenu pour les personnes de même race.")  
     df2 = df.groupby(['age', 'match'])['samerace'].value_counts().reset_index()
     df2 = df2[df2.match == 1]
     df2['samerace'] = df2['samerace'].apply(lambda x: '#FFFFFF' if x == 0 else '#E5F90B')
@@ -64,8 +71,8 @@ with tab2:
         " race identique : ",
         ("", "yellow", "#E5F90B"),)
     expander3 = st.expander("Valeurs manquantes :")
-    expander3.metric(value=df2['samerace'].isnull().sum(), label="Pour les hommes.")
-    expander3.metric(value=df2['samerace'].isnull().sum(), label="Pour les femmes.")
+    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les hommes.")
+    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les femmes.")
 # affichage qualités
 with tab3:    
     st.subheader("Suite au speed dating, il a été demandé de repenser leurs décisions.")
@@ -102,7 +109,7 @@ with tab3:
                 ax3.axis('equal')
                 st.pyplot(fig3)
                 expander2 = st.expander("Valeurs manquantes :")
-                expander2.metric(value=df['attr7_2'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+                expander2.metric(value=df['attr7_2'][df.gender == 0][df.match == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         # Qualités recherchées par les hommes
@@ -131,15 +138,12 @@ with tab3:
                 ax4.axis('equal')
                 st.pyplot(fig4)
                 expander2 = st.expander("Valeurs manquantes :")
-                expander2.metric(value=df['attr7_2'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+                expander2.metric(value=df['attr7_2'][df.gender == 1][df.match == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Le nombre de rendez-vous obtenu suite au speed dating est très faible. "
-    "Nous avons en moyenne un peu plus d'un rendez-vous par personne, malgré une bonne correspondance dans les qualités recherchées. "
-    "L'importance de la race dans une relation se retrouve bien  ici dans les rendez-vous obtenus. "
+    "Le nombre de match obtenu suite au speed dating est très faible. "
+    "Nous avons en moyenne un peu plus d'un match par personne, malgré une bonne correspondance dans les qualités recherchées. "
+    "L'importance de la race dans une relation se retrouve bien ici dans les matchs obtenus, nous n'avons pas de retour concernant la religion. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)
-st.divider()
-expander = st.expander("considérations :")
-expander.write("Pour obtenir un rendez-vous, il faut que les 2 participants aient décidé de se revoir.")
 

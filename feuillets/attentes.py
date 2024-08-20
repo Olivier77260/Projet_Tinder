@@ -51,7 +51,6 @@ tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Objectifs***]", "##### :blue[***2
 df2 = load_data_wait(df)
 with tab1:    
     tab1.subheader("Principal objectif des participants à cet événement")
-    tab1.divider()
     age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente1", value=25,)      
     st.write("L'age selectionné est ", age, "ans")
     objectifs = df2.groupby(['goal', (df2.age == age)], dropna=True)['gender'].value_counts().reset_index()
@@ -115,7 +114,6 @@ with tab1:
 
 with tab2:
     tab2.subheader("Qualités recherchées chez le sexe opposé.")
-    st.divider()
     age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente2", value=25,)
     # qualité noteé dans les waves de 1 à 5 et de 10 à 21, les waves 6 à 9 sont non conformes à la notation demandée.
     st.write("L'age selectionné est ", age, "ans")
@@ -178,7 +176,6 @@ with tab2:
 
 with tab3:
     tab3.subheader("L'espoir d'être heureux avec les personnes rencontrées lors de l'événement de speed_dating")
-    st.divider()
     happy_gender = df2.groupby('exphappy', dropna=True)['gender'].value_counts().reset_index()
     happy_gender['gender'] = happy_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
     colors = "gender"

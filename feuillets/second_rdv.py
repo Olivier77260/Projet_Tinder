@@ -15,7 +15,8 @@ st.markdown("## <font color='tomato'><ins>**DEUXIEME RENDEZ-VOUS**</ins></font>"
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Suivant l'âge***]", "##### :blue[***2. Suivant la race***]", "##### :blue[***2. Qualités recherchées***]"])
 
 with tab1:
-    df1 = df.groupby(['age', 'gender'])['num_in_3'].sum().reset_index()    
+    st.subheader("Nombre de rendez-vous obtenu en fonction de l'âge.")  
+    df1 = df.groupby(['age', 'gender', (df.date_3 == 1)])['num_in_3'].sum().reset_index()    
     df1['gender'] = df1['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')      
     st.bar_chart(df1, x="age", y="num_in_3", color='gender', stack=False, use_container_width=True)
     annotated_text(
@@ -24,29 +25,32 @@ with tab1:
     " Female : ",
     ("", "rose", "#ff00ff"),)
     expander2 = st.expander("Valeurs manquantes :")
-    expander2.metric(value=df['num_in_3'][df.gender == 1].isnull().sum(), label="Pour les hommes.")
-    expander2.metric(value=df['num_in_3'][df.gender == 0].isnull().sum(), label="Pour les femmes.")
+    expander2.metric(value=df['num_in_3'][df.gender == 1][df.date_3 == 1].isnull().sum(), label="Pour les hommes.")
+    expander2.metric(value=df['num_in_3'][df.gender == 0][df.date_3 == 1].isnull().sum(), label="Pour les femmes.")
     col1, col2, col3, col4 = st.columns(4, gap="medium")
 
-    # with col1:
-    #     Nb_total_rencontre = len(df)
-    #     st.metric(value=Nb_total_rencontre, label="Nombre total de rencontres lors du speed dating")
+    with col1:
+        Nb_total_rencontre = len(df)
+        if st.session_state.nb_rdv:
+            st.metric(value=st.session_state.nb_rdv, label="Nombre total de match suite au speed dating")
 
 
-    # with col2:
-    #     st.metric(value=result, label="Nombre total de rendez-vous obtenu")
+    with col2:        
+        total_rdv = df1['num_in_3'].sum()
+        st.metric(value=total_rdv, label="Nombre total de rendez-vous réellement obtenu")
 
-    # with col3:
-    #     pourcentage = np.round(result * 100 / Nb_total_rencontre, 2)
-    #     st.metric(value=pourcentage, label="soit en pourcentage")
+    with col3:
+        pourcentage = np.round(total_rdv * 100 / st.session_state.nb_rdv, 2)
+        st.metric(value=pourcentage, label="soit en pourcentage")
 
-    # with col4:
-    #     participant = nb_participant(df)
-    #     pourcentage = np.round(result / participant, 2)
-    #     st.metric(value=pourcentage, label="Nombre de rendez-vous obtenu par participant")
+    with col4:
+        participant = nb_participant(df)
+        pourcentage2 = np.round(total_rdv / participant, 2)
+        st.metric(value=pourcentage2, label="Nombre de rendez-vous obtenu par participant")
 
 with tab2:
-    df2 = df.groupby(['age', 'gender', 'samerace'])['num_in_3'].sum().reset_index()
+    st.subheader("Nombre de rendez-vous obtenu entre des personnes de même race.")  
+    df2 = df.groupby(['age', 'gender', 'samerace', (df.date_3 == 1)])['num_in_3'].sum().reset_index()
     df2['samerace'] = df2['samerace'].apply(lambda x: '#FFFFFF' if x == 0 else '#E5F90B')
     st.bar_chart(df2, x="age", y="num_in_3", color='samerace', stack=False, use_container_width=True)
     annotated_text(
@@ -55,16 +59,16 @@ with tab2:
         " race identique : ",
         ("", "yellow", "#E5F90B"),)
     expander3 = st.expander("Valeurs manquantes :")
-    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les hommes.")
-    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les femmes.")
+    expander3.metric(value=df['samerace'][df.gender == 1][df.date_3 == 1].isnull().sum(), label="Pour les hommes.")
+    expander3.metric(value=df['samerace'][df.gender == 0][df.date_3 == 1].isnull().sum(), label="Pour les femmes.")
 
 with tab3:    
-    st.subheader("Suite au speed dating, il a été demandé de repenser leurs décisions.")
+    st.subheader("Aprés le rendez-vous, il a été demandé de repenser leurs décisions par rapport au speed dating.")
     age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
     st.write("L'age selectionné est ", age, "ans")
-    list_search = df.groupby(['gender', (df.age == age), (df.match == 1)], dropna=True).aggregate({'attr7_3':'mean','shar7_3':'mean','sinc7_3':'mean','intel7_3':'mean','fun7_3':'mean','amb7_3':'mean'}).reset_index()
+    list_search = df.groupby(['gender', (df.age == age), (df.date_3 == 1)], dropna=True).aggregate({'attr7_3':'mean','shar7_3':'mean','sinc7_3':'mean','intel7_3':'mean','fun7_3':'mean','amb7_3':'mean'}).reset_index()
     list_search = list_search[list_search.age == True]
-    list_search = list_search[list_search.match == True]
+    list_search = list_search[list_search.date_3 == True]
     col1, col2 = st.columns(2, gap='medium')
     with col1:
         # Qualités recherchées par les femmes
@@ -74,7 +78,7 @@ with tab3:
             list_search_female = list_search[list_search['gender'] == 0].reset_index()
             list_search_female = list_search_female.drop('gender', axis=1)
             list_search_female = list_search_female.drop('age', axis=1)
-            list_search_female = list_search_female.drop('match', axis=1)
+            list_search_female = list_search_female.drop('date_3', axis=1)
             list_search_female = list_search_female.drop('index', axis=1)  
             list_search_female.dropna(inplace=True)                   
             if list_search_female.empty:
@@ -93,7 +97,7 @@ with tab3:
                 ax3.axis('equal')
                 st.pyplot(fig3)
                 expander2 = st.expander("Valeurs manquantes :")
-                expander2.metric(value=df['attr7_3'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
+                expander2.metric(value=df['attr7_3'][df.gender == 0][df.date_3 == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
     with col2:
         # Qualités recherchées par les hommes
@@ -103,7 +107,7 @@ with tab3:
             list_search_male = list_search[list_search['gender'] == 1].reset_index()
             list_search_male = list_search_male.drop('gender', axis=1)
             list_search_male = list_search_male.drop('age', axis=1)
-            list_search_male = list_search_male.drop('match', axis=1)
+            list_search_male = list_search_male.drop('date_3', axis=1)
             list_search_male = list_search_male.drop('index', axis=1)
             list_search_male.dropna(inplace=True)                      
             if list_search_male.empty: 
@@ -122,15 +126,12 @@ with tab3:
                 ax4.axis('equal')
                 st.pyplot(fig4)
                 expander2 = st.expander("Valeurs manquantes :")
-                expander2.metric(value=df['attr7_3'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
+                expander2.metric(value=df['attr7_3'][df.gender == 1][df.date_3 == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Le nombre de rendez-vous obtenu suite au speed dating est très faible. "
+    "Suite au nombre de personnes qui ont matché ensemble lors du speed dating, le nombre de rendez-vous obtenu aprés chute encore légérement . "
     "Nous avons en moyenne un peu plus d'un rendez-vous par personne, malgré une bonne correspondance dans les qualités recherchées. "
-    "L'importance de la race dans une relation se retrouve bien  ici dans les rendez-vous obtenus. "
+    "L'importance de la race dans une relation se retrouve bien ici dans les rendez-vous obtenus. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)
-st.divider()
-expander = st.expander("considérations :")
-expander.write("Pour obtenir un rendez-vous, il faut que les 2 participants aient décidé de se revoir.")
 
