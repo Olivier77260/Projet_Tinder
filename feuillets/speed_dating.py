@@ -206,15 +206,16 @@ with tab4:
     df9 = df9.groupby('gender')['numdat_2'].value_counts().reset_index()
     df10 = df9[df9.gender == 1]
     df11 = df9[df9.gender == 0]
-
+    container3 = st.container(border=True)    
+    container3.write("Satisfaction sur les personnes rencontrées notée sur 10 :")
     col7, col8 = st.columns(2)
     with col7:
-        st.metric(value=sat_male, label="Satisfaction  sur 10 des personnes rencontrées pour les hommes")
+        st.metric(value=sat_male, label="Note pour les hommes")
 
     with col8:
-        st.metric(value=sat_female, label="Satisfaction sur 10 des personnes rencontrées pour les femmes")
+        st.metric(value=sat_female, label="Note pour les femmes")
     container1 = st.container(border=True)    
-    container1.write("Le temps de 4 minutes du speed dating était :")
+    container1.write("Le temps imparti de 4 minutes du speed dating était :")
     col9, col10, col11 = st.columns(3)
     
     with col9:        
@@ -230,25 +231,28 @@ with tab4:
         st.metric(value=str(round((df7['count'][2])*100/nb_participant(df), 2)) + " %", label="trop long pour les femmes")
 
     container2 = st.container(border=True)    
-    container2.write("Le nombre de speed dating :")
+    container2.write("Le nombre de speed dating était :")
     col9, col10, col11 = st.columns(3)
     with col9:        
-        st.metric(value=df10['count'][3], label="trop peu pour les hommes")
-        st.metric(value=df11['count'][0], label="trop peu pour les femmes")       
+        st.metric(value=str(round((df10['count'][3])*100/nb_participant(df), 2)) + " %", label="trop peu pour les hommes")
+        st.metric(value=str(round((df11['count'][0])*100/nb_participant(df), 2)) + " %", label="trop peu pour les femmes")       
 
     with col10:
-        st.metric(value=df10['count'][4], label="juste ce qu'il faut pour les hommes")
-        st.metric(value=df11['count'][1], label="juste ce qu'il faut pour les femmes")
+        st.metric(value=str(round((df10['count'][4])*100/nb_participant(df), 2)) + " %", label="juste ce qu'il faut pour les hommes")
+        st.metric(value=str(round((df11['count'][1])*100/nb_participant(df), 2)) + " %", label="juste ce qu'il faut pour les femmes")
 
     with col11:
-        st.metric(value=df10['count'][5], label="trop long pour les hommes")
-        st.metric(value=df11['count'][2], label="trop long pour les femmes")
+        st.metric(value=str(round((df10['count'][5])*100/nb_participant(df), 2)) + " %", label="trop pour les hommes")
+        st.metric(value=str(round((df11['count'][2])*100/nb_participant(df), 2)) + " %", label="trop pour les femmes")
     
 txt = st.text_area(
     "#### **Interprétation :**",
     "Les qualités recherchées, en majorité par les hommes et les femmes avant les rendez-vous, sont l'attractivité. "
     "A l'issu de ces speed dating les qualités attribuées, que ce soit par les femmes ou les hommes, deviennent beaucoup plus équilibrées. "
-    "On voit que rien ne permet clairement d'identifier pourquoi une suite est donnée avec un rendez-vous.",)
+    "On voit que rien ne permet clairement d'identifier pourquoi une suite est donnée avec un rendez-vous. "
+    "L'indice de satisfaction des personnes rencontrées obtient à peine la moyenne, ce qui veut dire que les matchs proposés ne sont pas adéquates. "
+    "Le temps de 4 minutes du speed dating en est peut-être la raison car trop court."
+    ,)
 st.divider()
 expander = st.expander("considérations :")
 expander.write("Le speed dating est un rendez-vous d'une durée d'environ 4 mn avec le partenaire selectionné.")
