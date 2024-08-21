@@ -53,15 +53,15 @@ religion_female = religion_female.drop('gender', axis=1)
 religion_female.sort_values(by="count", ascending=False, inplace=True)
 
 # Nuage de point
-import altair as alt
+    import altair as alt
 
-c = (
-    alt.Chart(df3)
-    .mark_circle()
-    .encode(x="age", y="match", color="gender", tooltip=["age", "match", "gender"])
-)
+    c = (
+        alt.Chart(happy_gender)
+        .mark_circle()
+        .encode(x="exphappy", y="count", size='count', color="count", tooltip=["count", "exphappy", "colors"])
+    )
 
-st.write(c)
+    st.altair_chart(c, theme=None, use_container_width=True)
 
 :mailbox_with_mail:
 :iphone:

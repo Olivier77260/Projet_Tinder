@@ -177,17 +177,18 @@ with tab2:
 with tab3:
     tab3.subheader("L'espoir d'être heureux avec les personnes rencontrées lors de l'événement de speed_dating")
     happy_gender = df2.groupby('exphappy', dropna=True)['gender'].value_counts().reset_index()
-    happy_gender['gender'] = happy_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
-    colors = "gender"
-    st.bar_chart(happy_gender, x="exphappy", y="count", x_label="Espoir d'une rencontre heureuse", color=colors, stack=False, use_container_width=True)
+    happy_gender['gender'] = happy_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+    st.bar_chart(happy_gender, x="exphappy", y="count", x_label="Espoir d'une rencontre heureuse", color="gender", stack='normalize', use_container_width=True)
     expander5 = tab3.expander("Valeurs manquantes :")
-    expander5.metric(value=df2['exphappy'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
-    expander5.metric(value=df2['exphappy'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
+    expander5.metric(value=df['exphappy'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
+    expander5.metric(value=df['exphappy'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
+
+
 
 txt = st.text_area(
     "#### **Interprétation :**",
     "Les attentes des participants sont surtout de passer une agréable soirée. "
-    "Les femmes restent plus septiques par rapport aux hommes quant à trouver le bonheur après cette soirée. ",)
+    "Les hommes sont plus confiants que les femmes quant à trouver le bonheur après cette soirée. ",)
 st.divider()
 expander = st.expander("considérations :")
 expander.write("Sur une échelle de 1 à 10 est noté l'espoir d'être heureux avec les personnes rencontrées.")     

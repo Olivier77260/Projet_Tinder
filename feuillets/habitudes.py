@@ -1,6 +1,5 @@
 import streamlit as st
 from fonctions import list_age
-from annotated_text import annotated_text
 
 @st.cache_data
 def Frequence2(x):
@@ -31,12 +30,12 @@ st.markdown("## <font color='tomato'><ins>**HABITUDES DE VIE DES PARTICIPANTS**<
 
 # frequence des rendez-vous
 sorties = df2.groupby('date', dropna=True)['gender'].value_counts().reset_index()
-sorties['gender'] = sorties['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
+sorties['gender'] = sorties['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
 sorties.date = sorties.date.map(Frequence2)
 
 # frequence des sorties
 rdv = df2.groupby('go_out', dropna=True)['gender'].value_counts().reset_index()
-rdv['gender'] = rdv['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
+rdv['gender'] = rdv['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
 rdv.go_out = rdv.go_out.map(Frequence2)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Sorties et rendez-vous***]", "##### :blue[***2. Races***]", "##### :blue[***3. Religions***]"])
@@ -50,11 +49,6 @@ with tab1:
     with col2:
         st.subheader("Fréquence des rendez-vous.")
         st.bar_chart(sorties, x='date', y='count', stack=False, y_label="Fréquence des rendez-vous", use_container_width=True, color="gender", horizontal=True)
-        annotated_text(
-            "Male : ",
-            ("", "blue", "#4169e1"),
-            " Female : ",
-            ("", "rose", "#ff00ff"),)
         expander3 = st.expander("Valeurs manquantes :")      
         expander3.metric(value=df2['date'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
         expander3.metric(value=df2['date'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -76,16 +70,11 @@ with tab2:
     )
     race = df2.groupby(['imprace',(df2.age == age_race)], dropna=True)['gender'].value_counts().reset_index()
     race = race[race.age == True]
-    race['gender'] = race['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
+    race['gender'] = race['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
     race = race.drop(race[race.index==0].index)
     st.write("L'age selectionné est ", age_race, "ans")
     st.subheader("Importance interraciale dans une relation :")
-    st.bar_chart(race, x="imprace", y="count", x_label="Importance de la race", stack=False, use_container_width=True, color="gender")
-    annotated_text(
-            "Male : ",
-            ("", "blue", "#4169e1"),
-            " Female : ",
-            ("", "rose", "#ff00ff"),)
+    st.bar_chart(race, x="imprace", y="count", x_label="Importance de la race", stack=True, use_container_width=True, color="gender")
     expander1 = st.expander("Valeurs manquantes :")      
     expander1.metric(value=df2['imprace'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander1.metric(value=df2['imprace'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -100,15 +89,10 @@ with tab3:
     )
     religion = df2.groupby(["imprelig",(df2.age == age_religion)], as_index=False)["gender"].value_counts()
     religion = religion[religion.age == True]
-    religion['gender'] = religion['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
+    religion['gender'] = religion['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
     st.write("L'age selectionné est ", age_religion, "ans")
     st.subheader("Importance de la religion dans une relation.")
-    st.bar_chart(religion, x="imprelig", y="count", stack=False, use_container_width=True, color="gender", x_label="Importance de la religion")
-    annotated_text(
-            "Male : ",
-            ("", "blue", "#4169e1"),
-            " Female : ",
-            ("", "rose", "#ff00ff"),)
+    st.bar_chart(religion, x="imprelig", y="count", stack=True, use_container_width=True, color="gender", x_label="Importance de la religion")
     expander2 = st.expander("Valeurs manquantes :")      
     expander2.metric(value=df2['imprelig'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander2.metric(value=df2['imprelig'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -116,8 +100,8 @@ with tab3:
 txt = st.text_area(
     "#### **Interprétation :**",
     "Les participants sont en grandes majorité des personnes qui sortent assez souvent. "
-    "Malgré tout elles n'ont pas forcément un nombre de rendez-vous conséquents. "
-    "En grande majorité ces personnes attachent une grande importance au fait d'être de la même race et de la même religion.",)
+    "Malgré tout, elles n'ont pas forcément un nombre de rendez-vous conséquents. "
+    "Globalement ces personnes n'attachent pas une grande importance au fait d'être de la même race et de la même religion dans une relation.",)
 st.divider()
 expander = st.expander("considérations :")
-expander.write("Noter sur une échelle de 1 à 10 l'importance qu'a pour vous de sortir avec une personne de même origine raciale ou religieuse.")
+expander.write("Noter sur une échelle de 1 à 10 l'importance qu'a pour vous de sortir avec une personne de même origine raciale ou religieuse dans une relation.")

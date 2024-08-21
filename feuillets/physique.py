@@ -2,7 +2,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from annotated_text import annotated_text
 
 @st.cache_data
 def Races(x):
@@ -37,14 +36,8 @@ tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Graphique des âges***]", "##### 
 with tab1:
     st.subheader("""Graphique des âges de nos participants :""")
     age_gender = df2.groupby('age')['gender'].value_counts().reset_index()
-    age_gender['gender'] = age_gender['gender'].apply(lambda x: '#ff00ff' if x == 0 else '#4169e1')
-    colors="gender"
-    st.bar_chart(age_gender, x="age", y="count", color=colors, stack=False, use_container_width=True)
-    annotated_text(
-            "Male : ",
-            ("", "blue", "#4169e1"),
-            " Female : ",
-            ("", "rose", "#ff00ff"),)
+    age_gender['gender'] = age_gender['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
+    st.bar_chart(age_gender, x="age", y="count", color='gender', stack=False, use_container_width=True)
     expander1 = st.expander("Valeurs manquantes :")
     expander1.metric(value=df2['age'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
     expander1.metric(value=df2['age'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes chez les hommes.")
@@ -93,8 +86,7 @@ with tab3:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Si on regarde par tranche d’âge, ce sont les femmes qui utilisent le plus l'application, "
-    "certainement par sécurité par rapport à une relation fortuite. Cela s'estompe vers la trentaine, "
-    "âge moyen du premier enfant pour les pays en développement, pour reprendre par la suite. "
+    "Dans cette étude la mixité homme/femme est de 50/50, avec une majorité de femme autour de la trentaine. "
+    "On remarque aussi que nous avons à peine une cinquantaine en moyenne par tranche d'âge. "
     "La race majoritairement représentée est de type European/Caucasian-American suivie par le type Asian/Pacific Islander/Asian-American. "
     "L'opération de speed dating a eu lieu dans Beaucoup de pays",)

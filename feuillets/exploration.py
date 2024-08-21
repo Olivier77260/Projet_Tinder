@@ -40,37 +40,34 @@ with tab1:
     with col4:
         st.metric(label="Nombre de colonnes catégorielles", value=somme_cat_value.sum())
 
-    st.subheader("Beaucoup de données catégorielles ont été converties numériquement et ne pouront être utilisées pour des calculs.")
+
 
 # noms des colonnes
 with tab2:
-    st.subheader("Le nombre de participants à cette enquête est de " + str(nb_participant(df)) + " personnes, déterminé par la colonne iid suivant la note explicative, ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde.")
-
-    st.subheader("Le nom des colonnes n'étant pas très explicite, la documentation fournie nous sera d'une grande aide.")
     st.write('Nom des colonnes')
     name_colonnes = df.columns
     st.dataframe(name_colonnes, width=200)
 
 # données manquantes
-with tab3:
-    in_null = df.isnull().sum().reset_index(name="nul")
-    st.write('Données manquantes')
-    st.dataframe(in_null, width=200)
-    st.subheader("""On peut voir que le nombre 79 revient souvent dans les différentes colonnes et donc elles seront supprimées car elles contiennent des données essentielles à l'étude."""
-                 """ Beaucoup de données restent manquantes et demanderont une attention particulière.""")
-    st.subheader("""Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave. Les waves de 6 à 9 sont évaluées en fonction d'une échelle allant de 1 à 10."""
-                 """ Alors que les waves de 1 à 5 et de 10 à 21 ont 100 points à répartir entre les différents attributs.""")
-    st.subheader('Donc il faudra bien les séparer lors des différents calculs.')
-    st.subheader('Certaines wave de 6 à 9 ne respectent pas la notation de 1 à 10 et seront simplement exclut des calculs car non conforme à la base de notation.')
-    st.write("Exemple de valeurs non conforme de la wave 6")
-    exemple = df.groupby(['gender', (df.wave == 6)]).aggregate({'pf_o_att':'mean','pf_o_sin':'mean','pf_o_int':'mean','pf_o_fun':'mean','pf_o_amb':'mean','pf_o_sha':'mean'}).reset_index()
-    st.dataframe(exemple)
+with tab3:    
+    col5, col6 = st.columns(2, gap="small")
+    with col5:
+        st.write('Données manquantes')
+        in_null = df.isnull().sum().reset_index(name="nul")    
+        st.dataframe(in_null, width=200)
+    with col6:
+        st.write("Exemple de valeurs max non conforme dans la wave 6")
+        exemple1 = df.groupby(['gender', (df.wave == 6)]).agg({'pf_o_att':'max','pf_o_sin':'max','pf_o_int':'max','pf_o_fun':'max','pf_o_amb':'max','pf_o_sha':'max'}).reset_index()
+        exemple1 = exemple1[exemple1.wave == True]
+        st.dataframe(exemple1)
+        st.write("Exemple de valeurs max non conforme dans la wave 7")
+        exemple2 = df.groupby(['gender', (df.wave == 7)]).agg({'pf_o_att':'max','pf_o_sin':'max','pf_o_int':'max','pf_o_fun':'max','pf_o_amb':'max','pf_o_sha':'max'}).reset_index()
+        exemple2 = exemple2[exemple2.wave == True]
+        st.dataframe(exemple2)
 
 # ages
 with tab4:
     st.subheader("Profil des ages masculins et féminins de nos participants")
-    # age_gender = df.groupby('age')['gender'].value_counts().reset_index(name='count')
-    # age_gender_female = age_gender.loc[age_gender['gender'] == 0]
     age_gender_female = age_gender(0, df)
     fig1, ax1 = plt.subplots()
     ax1.set_ylabel('age')
@@ -84,12 +81,26 @@ with tab4:
     ax2.set_title('Outlier des ages masculins')
     ax2.boxplot(age_gender_male['age'], 0, 'gD', patch_artist=True, boxprops={'facecolor': 'bisque'}, widths=0.5)
 
-    col5, col6 = st.columns(2, gap="medium")
-    with col5:
+    col7, col8 = st.columns(2, gap="medium")
+    with col7:
         st.pyplot(fig1)
-    with col6:
+    with col8:
         st.pyplot(fig2)
 
-    st.subheader("""Nous avons une personnes de sexe féminin agée de 55 ans qui """
-                """a obtenu plusieurs rendez-vous avec des jeunes, je pense qu'il s'agit certainement d'une erreur de saisie de son age.""")
-    st.subheader("J'ai décidé de mettre en place un bouton de selèction qui permet de supprimer de l'étude ces valeurs dites aberrantes, ce qui permettra de voir l'impact réel sur notre étude")
+txt = st.text_area(
+    "#### **Interprétation :**",
+    "Le nombre de participants à cette enquête est de " + str(nb_participant(df)) + " personnes, déterminé par la colonne iid suivant la note explicative, "
+    "ce qui donne environ une quinzaine de speed dating par personne, "
+    "ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde. "
+    "Le nom des colonnes n'étant pas très explicite, la documentation fournie nous sera d'une grande aide. "
+    "On peut voir que le nombre 79 revient souvent dans les différentes colonnes et donc elles seront supprimées car elles contiennent des données essentielles à l'étude. "
+    "Beaucoup de données restent manquantes et demanderont une attention particulière. "
+    "Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave. Les waves de 6 à 9 sont évaluées en fonction d'une échelle allant de 1 à 10. "
+    "Alors que les waves de 1 à 5 et de 10 à 21 ont 100 points à répartir entre les différents attributs. "
+    "Donc il faudra bien les séparer lors des différents calculs. "
+    "Certaines wave de 6 à 9 ne respectent pas la notation de 1 à 10 et seront simplement exclut des calculs car non conforme à la base de notation. "
+    ""
+    "Beaucoup de données catégorielles ont été converties numériquement et ne pourront être utilisées pour des calculs. "
+    "Nous avons une personnes de sexe féminin âgée de 55 ans qui a obtenu plusieurs rendez-vous avec des jeunes, je pense qu'il s'agit certainement d'une erreur de saisie de son âge. "
+    "J'ai mis en place un bouton de sélection qui permet de supprimer de l'étude toutes ces valeurs dites aberrantes, ce qui permettra de voir l'impact réel sur notre étude"
+    , height=300)
