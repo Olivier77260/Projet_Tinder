@@ -26,23 +26,23 @@ def main():
     preambule = st.Page("feuillets/preambule.py", title="1 - Préambule", icon="📇", default=True)
     projet = st.Page("feuillets/projet.py", title="2 - Projet", icon="🚧", default=False)
     objectif = st.Page("feuillets/objectif.py", title="3 - Objectif", icon="🎯", default=False)
-    portee = st.Page("feuillets/portee.py", title="4 - Portée du projet", icon="🖼️", default=False)
+    portee = st.Page("feuillets/portee.py", title="4 - Portée du projet", icon="📌", default=False)
 
-    donnees = st.Page("feuillets/donnees.py", title="- Données", icon=":material/database:")
+    donnees = st.Page("feuillets/donnees.py", title="- Données", icon="📒")
 
     exploration = st.Page("feuillets/exploration.py", title="- Exploration", icon="📈")
 
-    physique = st.Page("feuillets/physique.py", title="1 - Physique", icon="♂️")
-    social = st.Page("feuillets/social.py", title="2 - Social", icon=":material/language:")
+    physique = st.Page("feuillets/physique.py", title="1 - Physique", icon="⚧️")
+    social = st.Page("feuillets/social.py", title="2 - Social", icon="👫")
 
     habitudes = st.Page("feuillets/habitudes.py", title="- Habitudes", icon="🍀")
 
-    attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="⏱️")
+    attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="🕔️")
     speed_dating = st.Page("feuillets/speed_dating.py", title="2 - Speed Dating", icon="🎈")
-    bilan = st.Page("feuillets/bilan.py", title="3 - Bilan du speed dating", icon="🎉")
-    second_rdv = st.Page("feuillets/second_rdv.py", title="4 - Deuxiéme rendez-vous", icon="🎉")
+    bilan = st.Page("feuillets/bilan.py", title="3 - Bilan du speed dating", icon="💅")
+    second_rdv = st.Page("feuillets/second_rdv.py", title="4 - Deuxiéme rendez-vous", icon="❤️")
 
-    conclusion = st.Page("feuillets/conclusion.py", title="- Conclusion", icon="🃏")
+    conclusion = st.Page("feuillets/conclusion.py", title="- Conclusion", icon="✒️")
     
     pages = {
         "🏠 Préambule": [preambule, projet, objectif, portee,],
@@ -50,7 +50,7 @@ def main():
         "🛠️ Analyse des données": [exploration,],
         "🌍 Profil des participants": [physique, social,],
         "🌈 Habitudes de vie des participants": [habitudes,],
-        "👩‍🚀 Expérimentation": [attentes, speed_dating, bilan, second_rdv,],
+        "🤩 Expérimentation": [attentes, speed_dating, bilan, second_rdv,],
         "🌋 Conclusion": [conclusion,],
     }
     

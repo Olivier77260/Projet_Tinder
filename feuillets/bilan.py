@@ -106,7 +106,7 @@ with tab3:
                 expander2 = st.expander("Valeurs manquantes :")
                 expander2.metric(value=df['attr7_2'][df.gender == 1][df.match == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
-col1, col2, col3, col4 = st.columns(4, gap="medium")
+col1, col2, col3, col4, col5 = st.columns(5, gap="medium")
 
 with col1:
     Nb_total_rencontre = len(df)
@@ -131,9 +131,17 @@ with col4:
     pourcentage2 = np.round(result / participant, 2)
     st.metric(value=pourcentage2, label="Nombre de match par participant")
 
+with col5:
+    diff = df.groupby([(df.gender == 1), (df.match == 1), 'idg', 'wave'])["diff_age"].mean().reset_index(name="Moy")
+    diff = diff[diff.gender == True]
+    diff = diff[diff.match == True]['Moy'].mean()
+    st.metric(value=np.round(diff, 2), label="Différence d'âge moyenne H/F")
+
+
 txt = st.text_area(
     "#### **Interprétation :**",
     "Le nombre de match obtenu suite au speed dating est très faible. "
+    "L'écart moyen entre l'âge des hommes et des femmes n'est pas un critére significatif. "
     "Nous avons en moyenne un peu plus d'un match par personne, malgré une bonne correspondance dans les qualités recherchées. "
     "Contrairement aux habitudes des gens, on voit qu'il y a eu pas mal de match entre des gens de races différentes. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)

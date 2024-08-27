@@ -74,13 +74,13 @@ with tab1:
             expander2.metric(value=df2['attr2_1'][df2.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes.")
 
 preference_positive = df[(df.dec == 1)]
-preference_positive = preference_positive.fillna(df.median(numeric_only=True))
-research_good = preference_positive.groupby(['gender', (preference_positive.age == age)]).aggregate({'attr':'median','sinc':'median','intel':'median','fun':'median','amb':'median','shar':'median'}).reset_index()
+preference_positive = preference_positive.fillna(df.mean(numeric_only=True))
+research_good = preference_positive.groupby(['gender', (preference_positive.age == age)]).aggregate({'attr':'mean','sinc':'mean','intel':'mean','fun':'mean','amb':'mean','shar':'mean'}).reset_index()
 research_good = research_good[research_good.age == True] 
 
 preference_negative = df[(df.dec == 0)]
-preference_negative = preference_negative.fillna(df.median(numeric_only=True))
-research_bad = preference_negative.groupby(['gender', (preference_negative.age == age)]).aggregate({'attr':'median','sinc':'median','intel':'median','fun':'median','amb':'median','shar':'median'}).reset_index()
+preference_negative = preference_negative.fillna(df.mean(numeric_only=True))
+research_bad = preference_negative.groupby(['gender', (preference_negative.age == age)]).aggregate({'attr':'mean','sinc':'mean','intel':'mean','fun':'mean','amb':'mean','shar':'mean'}).reset_index()
 research_bad = research_bad[research_bad.age == True]
 
 #affichage qualités des hommes

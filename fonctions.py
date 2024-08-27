@@ -33,12 +33,14 @@ def load_data_True():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
     df.dropna(subset=['from', 'goal'], how='all', inplace=True)
     df =df[(df["age"] < 37) & (df["age"] > 18)].reset_index()
+    df["diff_age"] = df["age_o"] - df["age"]
     return df
 
 # dataframe complet
 @st.cache_data
 def load_data_False():
     df = pd.read_csv("Speed_Dating_Data.csv", encoding="cp1252", sep=',')
+    df["diff_age"] = df["age_o"] - df["age"]
     return df
 
 @st.cache_data

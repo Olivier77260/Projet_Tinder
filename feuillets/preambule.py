@@ -6,4 +6,4 @@ st.subheader("Tinder est une application de rencontres en ligne et de réseautag
 st.subheader("En 2021, Tinder a enregistré plus de 65 milliards de matchs dans le monde.")
 st.divider()
 st.page_link("https://tinder.com/fr", label="Site web de TINDER", icon="🌎")
-st.page_link("https://www.instagram.com/tinder/", label="Compte Instagram de TINDER", icon="❤️")
+st.page_link("https://www.instagram.com/tinder/", label="Compte Instagram de TINDER", icon="👨‍👦‍👦")

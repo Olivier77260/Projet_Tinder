@@ -13,9 +13,10 @@ st.write("""De plus, de nombreuses données sont manquantes, probablement en rai
 st.subheader("2 - Conclusion")
 
 st.write("""Les inquiétudes de Tinder sont bien fondées, Les résultats montrent un taux moyen de satisfaction dans les propositions de rencontre lors des speed datings. Bien que l'attrait physique soit le premier critère de sélection, la poursuite des rendez-vous semble principalement motivée par le désir de mieux connaître l'autre. """
-         """ Cela est probablement dû à la durée de 4 minutes du speed dating, jugée trop courte par les participants des deux sexes. """)
+         """ Cela est probablement dû à la durée de 4 minutes du speed dating, jugée trop courte par les participants des deux sexes. """
+         """La différence d'age entre les femmes et les hommes reste cependant necessaire avec des femmes plus jeunes que les hommes en général mais n'est pas fondamental. """)
 
 st.subheader("3 - Propositions d'améliorations")
 
-st.write("""Il est donc nécessaire de créer, pour chaque match, un désir de découvrir l'autre tout en préservant une part d'attractivité. """
+st.write("""Il est donc nécessaire de créer, pour chaque match, une part de mystére forçant le désir de découvrir l'autre tout en préservant une part d'attractivité. """
          """Ce paramétre étant trés subjectif, , il est à noter que, finalement, les participants sont ouverts à la découverte de la mixité sociale.  """)
