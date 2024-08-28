@@ -2,12 +2,14 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from fonctions import nb_participant
-from fonctions import list_age, quality_o_7_3
+from fonctions import list_age, quality_o_7_3, match
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
 else:
     df = st.session_state.dfFalse
+
+nb_rdv = match(df)
 
 st.markdown("## <font color='tomato'><ins>**DEUXIEME RENDEZ-VOUS**</ins></font>", unsafe_allow_html=True)   
 
@@ -22,8 +24,6 @@ with tab1:
     expander2.metric(value=df['num_in_3'][df.gender == 1][df.date_3 == 1].isnull().sum(), label="Pour les hommes.")
     expander2.metric(value=df['num_in_3'][df.gender == 0][df.date_3 == 1].isnull().sum(), label="Pour les femmes.")
 
-
-
 with tab2:
     st.subheader("Nombre de rendez-vous obtenu entre des personnes de même race.")  
     df2 = df.groupby(['age', 'samerace', (df.date_3 == 1)])['num_in_3'].sum().reset_index()
@@ -37,7 +37,8 @@ with tab3:
     st.subheader("Aprés le rendez-vous, il a été demandé de repenser leurs décisions par rapport au speed dating.")
     age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
     st.write("L'age selectionné est ", age, "ans")
-    list_search = df.groupby(['gender', (df.age == age), (df.date_3 == 1)], dropna=True).aggregate({'attr7_3':'mean','shar7_3':'mean','sinc7_3':'mean','intel7_3':'mean','fun7_3':'mean','amb7_3':'mean'}).reset_index()
+    list_search = df.fillna(df.mean(numeric_only=True))
+    list_search = list_search.groupby(['gender', (df.age == age), (df.date_3 == 1)], dropna=True).aggregate({'attr7_3':'mean','shar7_3':'mean','sinc7_3':'mean','intel7_3':'mean','fun7_3':'mean','amb7_3':'mean'}).reset_index()
     list_search = list_search[list_search.age == True]
     list_search = list_search[list_search.date_3 == True]
     col1, col2 = st.columns(2, gap='medium')
@@ -102,15 +103,14 @@ with tab3:
 col1, col2, col3, col4 = st.columns(4, gap="medium")
 
 with col1:
-    if st.session_state.nb_rdv:
-        st.metric(value=st.session_state.nb_rdv, label="Nombre total de match suite au speed dating")
+    st.metric(value=nb_rdv, label="Nombre total de match suite au speed dating")
 
 with col2:        
     total_rdv = df['num_in_3'][df.date_3 == 1].sum()
     st.metric(value=total_rdv, label="Nombre total de rendez-vous réellement obtenu")
 
 with col3:
-    pourcentage = np.round(total_rdv * 100 / st.session_state.nb_rdv, 2)
+    pourcentage = np.round(total_rdv * 100 / nb_rdv, 2)
     st.metric(value=pourcentage, label="soit en pourcentage")
 
 with col4:
@@ -125,3 +125,6 @@ txt = st.text_area(
     "L'importance de la race dans une relation se retrouve bien ici dans les rendez-vous obtenus. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)
 
+st.divider()
+expander = st.expander("considérations :")
+expander.write("Les valeurs manquantes ont été remplacées par la moyenne des valeurs.") 

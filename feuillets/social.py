@@ -95,7 +95,6 @@ tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Domaine des études***]", "##### 
 
 # domaine d'étude des hommes
 etude = df2.groupby('field_cd', dropna=True)['gender'].value_counts().reset_index()
-
 etude_male = etude[etude.gender == 1].set_index('field_cd')
 etude_male = etude_male.drop('gender', axis=1)
 etude_male = etude_male.squeeze()
@@ -206,6 +205,7 @@ hobbies = df2.groupby('gender', dropna=True).aggregate({'sports':'sum','tvsports
 # Hobbies des femmes
 hobbies_female = hobbies.loc[hobbies.index == 0]
 hobbies_female = hobbies_female.squeeze()
+hobbies_female.sort_values(ascending=True, inplace=True)
 colors = sns.color_palette("bright")
 fig5, ax5 = plt.subplots()
 ax5.pie(hobbies_female, labels=hobbies_female.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
@@ -214,6 +214,7 @@ ax5.axis('equal')
 # Hobbies des hommes
 hobbies_male = hobbies.loc[hobbies.index == 1]
 hobbies_male = hobbies_male.squeeze()
+hobbies_male.sort_values(ascending=True, inplace=True)
 colors = sns.color_palette("bright")
 fig6, ax6 = plt.subplots()
 ax6.pie(hobbies_male, labels=hobbies_male.index, autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)

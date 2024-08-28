@@ -40,9 +40,6 @@ rdv.go_out = rdv.go_out.map(Frequence2)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Sorties et rendez-vous***]", "##### :blue[***2. Races***]", "##### :blue[***3. Religions***]"])
 
-
-
-
 # affichage des rdv et sorties
 with tab1:
     col2, col3 = st.columns(2, gap='large')

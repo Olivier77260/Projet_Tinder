@@ -26,7 +26,6 @@ with tab1:
         st.metric(label="Nombre de colonnes", value=df.shape[1])
 
     st.write("Affichage des 5 premiéres lignes")
-
     st.dataframe(df.head(), hide_index=True)
     st.divider()
     df_num = df.select_dtypes(exclude="object")
@@ -39,8 +38,6 @@ with tab1:
         st.metric(label="Nombre de colonnes numérique", value=somme_num_value.sum())
     with col4:
         st.metric(label="Nombre de colonnes catégorielles", value=somme_cat_value.sum())
-
-
 
 # noms des colonnes
 with tab2:
@@ -73,7 +70,6 @@ with tab4:
     ax1.set_ylabel('age')
     ax1.set_title('Outlier des ages féminins')
     ax1.boxplot(age_gender_female['age'], 0, 'gD', patch_artist=True, boxprops={'facecolor': 'bisque'}, widths=0.5)
-
     # age_gender_male = age_gender.loc[age_gender['gender'] == 1]
     age_gender_male = age_gender(1, df)
     fig2, ax2 = plt.subplots()
@@ -93,12 +89,12 @@ txt = st.text_area(
     "ce qui donne environ une quinzaine de speed dating par personne, "
     "ce qui n'est pas très élevé aux vues des 65 milliards de match dans le monde. "
     "Le nom des colonnes n'étant pas très explicite, la documentation fournie nous sera d'une grande aide. "
-    "On peut voir que le nombre 79 revient souvent dans les différentes colonnes et donc elles seront supprimées car elles contiennent des données essentielles à l'étude. "
+    "On peut voir que le nombre 79 de données manquantes revient souvent dans les différentes colonnes et seront donc supprimées car elles contiennent des données essentielles à l'étude. "
     "Beaucoup de données restent manquantes et demanderont une attention particulière. "
     "Les évaluations demandées ne sont pas notées dans la même base en fonction de la wave. Les waves de 6 à 9 sont évaluées en fonction d'une échelle allant de 1 à 10. "
     "Alors que les waves de 1 à 5 et de 10 à 21 ont 100 points à répartir entre les différents attributs. "
     "Donc il faudra bien les séparer lors des différents calculs. "
-    "Certaines wave de 6 à 9 ne respectent pas la notation de 1 à 10 et seront simplement exclut des calculs car non conforme à la base de notation. "
+    "Certaines waves de 6 à 9 ne respectent pas la notation de 1 à 10 et seront simplement exclut des calculs car non conforme à la base de notation. "
     ""
     "Beaucoup de données catégorielles ont été converties numériquement et ne pourront être utilisées pour des calculs. "
     "Nous avons une personnes de sexe féminin âgée de 55 ans qui a obtenu plusieurs rendez-vous avec des jeunes, je pense qu'il s'agit certainement d'une erreur de saisie de son âge. "

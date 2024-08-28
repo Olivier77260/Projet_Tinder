@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+# Fonctions utilisées dans l'application avec leur mise en mémoire cache afin d'optimiser les resources.
+
 # listing des âges
 @st.cache_data
 def list_age(df):
@@ -106,3 +108,16 @@ def quality_o_7_3(x):
     else:
         size = "Has shared interests/hobbies"
     return size
+
+@st.cache_data
+def load_data_rdv(df):
+    df3 = df.groupby(['age', 'gender'])['match'].sum().reset_index()
+    df3['gender'] = df3['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')   
+    return df3
+
+@st.cache_data
+def match(data1):
+    df6 = load_data_rdv(data1)
+    rdv = df6[df6.gender == 'Female'].sum()
+    result = rdv.match
+    return result

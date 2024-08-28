@@ -45,7 +45,6 @@ with tab1:
 # race féminine
 race = df2.groupby('race', dropna=True)['gender'].value_counts().reset_index()
 race.race = race.race.map(Races)
-
 race_female = race[race.gender == 0]
 race_female = race_female.drop('gender', axis=1)
 race_female.sort_values('count', ascending=True, inplace=True)
@@ -63,7 +62,6 @@ explode = (0, 0, 0, 0, 0.1)
 fig2, ax2 = plt.subplots()
 ax2.pie(race_male['count'], explode=explode, labels=race_male.race, colors=color, autopct="%0.0f%%", shadow=True, startangle=-50)
 ax2.axis('equal')
-
 
 with tab2:
     col1, col2 = st.columns(2, gap='large')
@@ -86,7 +84,7 @@ with tab3:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Dans cette étude la mixité homme/femme est de 50/50, avec une majorité de femme autour de la trentaine. "
-    "On remarque aussi que nous avons à peine une cinquantaine en moyenne par tranche d'âge. "
+    "Dans cette étude la mixité homme/femme est de 50/50, avec une majorité de femme avant la trentaine. "
+    "On remarque aussi que nous avons à peine une cinquantaine de personnes en moyenne par tranche d'âge. "
     "La race majoritairement représentée est de type European/Caucasian-American suivie par le type Asian/Pacific Islander/Asian-American. "
-    "L'opération de speed dating a eu lieu dans Beaucoup de pays",)
+    "L'opération de speed dating a eu lieu dans Beaucoup de pays dans le monde.",)

@@ -1,6 +1,8 @@
 import streamlit as st
 from fonctions import delta, load_data_True, load_data_False
 
+# Fichier d'entrée de l'application
+
 def main():
     st.set_page_config(page_title="Tinder", page_icon="👩‍❤️‍👨", layout="wide", initial_sidebar_state="auto")
     st.logo("icons/tinder-logo.png")

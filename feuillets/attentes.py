@@ -44,13 +44,13 @@ def load_data_wait(df):
     df2 = df.groupby(['wave', 'exphappy', 'gender', 'age', 'goal', 'attr1_1','shar1_1','sinc1_1','intel1_1','fun1_1','amb1_1'], dropna=False)['iid'].value_counts().reset_index()
     return df2
 
+df2 = load_data_wait(df)
 st.markdown("## <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></font>", unsafe_allow_html=True)
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Objectifs***]", "##### :blue[***2. Les qualités recherchées***]", "##### :blue[***3. Leurs espoirs***]"])
 
-df2 = load_data_wait(df)
 with tab1:    
-    tab1.subheader("Principal objectif des participants à cet événement")
+    tab1.subheader("Principal objectif de participer à cet événement")
     age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente1", value=25,)      
     st.write("L'age selectionné est ", age, "ans")
     objectifs = df2.groupby(['goal', (df2.age == age)], dropna=True)['gender'].value_counts().reset_index()
@@ -120,12 +120,12 @@ with tab2:
     wave1a5_10a21 = df2[(df2['wave'] <= 5) | (df2['wave'] >=10)]
     wave1a5_10a21 = wave1a5_10a21.fillna(0)
     list_search = wave1a5_10a21.groupby(['gender', (wave1a5_10a21.age == age)]).aggregate({'attr1_1':'mean','shar1_1':'mean','sinc1_1':'mean','intel1_1':'mean','fun1_1':'mean','amb1_1':'mean'}).reset_index()
-    list_search = list_search[list_search.age == True]    
+    list_search = list_search[list_search.age == True]  
+
     # affichage qualités
     col3, col4 = st.columns(2, gap='medium')
     with col3:
-        # Qualités recherchées par les femmes
-        
+        # Qualités recherchées par les femmes        
         list_search_female = list_search[list_search['gender'] == 0].reset_index()
         list_search_female = list_search_female.drop('gender', axis=1)
         list_search_female = list_search_female.drop('age', axis=1)
@@ -141,7 +141,6 @@ with tab2:
                 explode.append(0)
             explode.append(0.1)
             fig3, ax3 = plt.subplots()
-
             st.subheader("Femmes")
             ax3.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax3.axis('equal')
@@ -149,7 +148,6 @@ with tab2:
         expander3 = st.expander("Valeurs manquantes :")
         expander3.metric(value=df2['attr1_1'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes.")
     
-
     with col4:
         # Qualités recherchées par les hommes
         list_search_male = list_search[list_search['gender'] == 1].reset_index()      
@@ -183,12 +181,10 @@ with tab3:
     expander5.metric(value=df['exphappy'][df.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes pour les femmes.")
     expander5.metric(value=df['exphappy'][df.gender == 1].isnull().sum(), label="Nombre de valeurs manquantes pour les hommes.")
 
-
-
 txt = st.text_area(
     "#### **Interprétation :**",
     "Les attentes des participants sont surtout de passer une agréable soirée. "
     "Les hommes sont plus confiants que les femmes quant à trouver le bonheur après cette soirée. ",)
 st.divider()
 expander = st.expander("considérations :")
-expander.write("Sur une échelle de 1 à 10 est noté l'espoir d'être heureux avec les personnes rencontrées.")     
+expander.write("Sur une échelle de 1 à 10 est noté l'espoir d'être heureux avec les personnes rencontrées.")

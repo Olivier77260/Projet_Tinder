@@ -1,8 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from fonctions import nb_participant
-from fonctions import list_age, quality_o_7
+from fonctions import list_age, quality_o_7, load_data_rdv, match, nb_participant
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -13,22 +12,16 @@ st.markdown("## <font color='tomato'><ins>**BILAN DU SPEED DATING**</ins></font>
 
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Suivant l'âge***]", "##### :blue[***2. Suivant la race***]", "##### :blue[***2. Qualités recherchées***]"])
 
-@st.cache_data
-def load_data_rdv(df):
-    df3 = df.groupby(['age', 'gender'])['match'].sum().reset_index()    
-    return df3
-
 df3 = load_data_rdv(df)
+result = match(df)
 
 with tab1:
-    st.subheader("Nombre de match obtenu en fonction de l'âge.")    
-    df3['gender'] = df3['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')    
+    st.subheader("Nombre de match obtenu en fonction de l'âge.")  
     st.bar_chart(df3, x="age", y="match", color='gender', stack=False, use_container_width=True)
     expander2 = st.expander("Valeurs manquantes :")
     expander2.metric(value=df['match'][df.gender == 1].isnull().sum(), label="Pour les hommes.")
     expander2.metric(value=df['match'][df.gender == 0].isnull().sum(), label="Pour les femmes.")
     
-
 with tab2:
     st.subheader("Nombre de match obtenu suivant la race.")  
     df2 = df.groupby(['age', (df.match == 1), 'gender'])['samerace'].value_counts().reset_index()
@@ -36,15 +29,16 @@ with tab2:
     df2['samerace'] = df2['samerace'].apply(lambda x: 'Non' if x == 0 else 'Oui')
     st.bar_chart(df2, x="age", y="count", color='samerace', stack=False, use_container_width=True)
     expander3 = st.expander("Valeurs manquantes :")
-    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les hommes.")
-    expander3.metric(value=df['samerace'].isnull().sum(), label="Pour les femmes.")
+    expander3.metric(value=df['samerace'][df.gender == 1].isnull().sum(), label="Pour les hommes.")
+    expander3.metric(value=df['samerace'][df.gender == 0].isnull().sum(), label="Pour les femmes.")
 
 # affichage qualités
 with tab3:    
     st.subheader("Suite au speed dating, il a été demandé de repenser leurs décisions.")
     age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
     st.write("L'age selectionné est ", age, "ans")
-    list_search = df.groupby(['gender', (df.age == age), (df.match == 1)], dropna=True).aggregate({'attr7_2':'mean','shar7_2':'mean','sinc7_2':'mean','intel7_2':'mean','fun7_2':'mean','amb7_2':'mean'}).reset_index()
+    list_search = df.fillna(df.mean(numeric_only=True))
+    list_search = list_search.groupby(['gender', (df.age == age), (df.match == 1)], dropna=True).aggregate({'attr7_2':'mean','shar7_2':'mean','sinc7_2':'mean','intel7_2':'mean','fun7_2':'mean','amb7_2':'mean'}).reset_index()
     list_search = list_search[list_search.age == True]
     list_search = list_search[list_search.match == True]
     col1, col2 = st.columns(2, gap='medium')
@@ -112,15 +106,10 @@ with col1:
     Nb_total_rencontre = len(df)
     st.metric(value=Nb_total_rencontre, label="Nombre total de rencontres lors du speed dating")
 
-
 with col2:
-    rdv = df3[df3.gender == 'Female'].sum()
-    result = rdv.match
     st.metric(value=result, label="Nombre total de match obtenu")
     expander = st.expander("considérations :")
     expander.write("Il faut que les 2 participants aient décidé de se revoir pour comptabiliser un match.")
-    if 'nb_rdv' not in st.session_state:
-        st.session_state.nb_rdv = result
 
 with col3:
     pourcentage = np.round(result * 100 / Nb_total_rencontre, 2)
@@ -137,7 +126,6 @@ with col5:
     diff = diff[diff.match == True]['Moy'].mean()
     st.metric(value=np.round(diff, 2), label="Différence d'âge moyenne H/F")
 
-
 txt = st.text_area(
     "#### **Interprétation :**",
     "Le nombre de match obtenu suite au speed dating est très faible. "
@@ -148,5 +136,4 @@ txt = st.text_area(
 
 st.divider()
 expander = st.expander("considérations :")
-expander.write("Le nombre élevé de données manquantes est dû au fait que les waves 6 à 9 n'ont pas été pris en compte car contenant des valeurs non conforme à la notation.") 
-
+expander.write("Les valeurs manquantes ont été remplacées par la moyenne des valeurs.") 

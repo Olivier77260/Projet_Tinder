@@ -1,3 +1,5 @@
+# Fichier utilisé pour la mise en place de l'application sur mon prpre serveur dans un container Docker afin de pérenniser l'utilisation suivant la version des modules.
+
 FROM python:3.9-slim
 
 WORKDIR /var/www/html/app
