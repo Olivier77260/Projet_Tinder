@@ -13,22 +13,6 @@ else:
     df = st.session_state.dfFalse
 
 @st.cache_data
-def Races(x):
-    if x == 1.0:
-        size = "Black/African American"
-    elif x == 2.0:
-        size = "European/Caucasian-American"
-    elif x == 3.0:
-        size = "Latino/Hispanic American"
-    elif x == 4.0:
-        size = "Asian/Pacific Islander/Asian-American"
-    elif x == 5.0:
-        size = "Native American"
-    else:
-        size = "Other"
-    return size
-
-@st.cache_data
 def ProfilSociaux(x):
     if x == 1.0:
         size = "Lawyer"
@@ -68,30 +52,28 @@ def ProfilSociaux(x):
         size = "Other"
     return size
 
-df.race = df.race.map(Races)
-list_race = df['race'].value_counts().reset_index()
 df.career_c = df.career_c.map(ProfilSociaux)
 list_carrer = df['career_c'].value_counts().reset_index()
-
-df = df.fillna(df.mean(numeric_only=True))
+derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
+df = derived_df.dropna()
 with st.spinner('Please wait...'):
-    features_list = ['age', 'race', 'samerace', 'career_c', 'imprelig', 'imprace', 'gender' ]
+    features_list = ['age', 'fun', 'samerace', 'career_c', 'attr', 'gender' ]
 
     X = df.loc[:,features_list]
-    y = df.loc[:,"match"]
+    y = df.loc[:,"dec"]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
                                                         test_size=0.2, 
                                                         random_state=0)
 
     X_test = X_test.reset_index().drop(columns=["index"])
-    X_test_age = X_test[X_test["age"]==28]
+    X_test_age = X_test[X_test["attr"]==10]
     X_test_age.index.tolist()
 
-    numeric_features = ['age', 'samerace', 'imprelig', 'imprace', 'gender' ] # Choose which column index we are going to scale
+    numeric_features = ['age', 'fun', 'samerace', 'attr', 'gender' ] # Choose which column index we are going to scale
     numeric_transformer = StandardScaler()
 
-    categorical_features = ['race', 'career_c']
+    categorical_features = ['career_c']
     categorical_transformer = OneHotEncoder(handle_unknown="ignore", drop='first')
 
     # Apply ColumnTransformer to create a pipeline that will apply the above preprocessing
@@ -120,19 +102,13 @@ st.write("MSE est de :", mse)
 with st.form("my_form"):
     st.write("Renseigner les élements ci-dessous")
     age = st.number_input("Votre age", min_value=18, max_value=55, format="%0.0f", step=1, placeholder="Type age...")
-    race = st.selectbox(
-        "Sélectionner votre race",
-        (list_race.race),
-        index=None,
-        placeholder="Select race...",
-        )
     career = st.selectbox(
         "Sélectionner votre profession",
         (list_carrer.career_c),
         index=None,
         placeholder="Select career...",
         )
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     with col1:
         genre = st.radio(
                 "Quel est votre genre ?",
@@ -152,12 +128,11 @@ with st.form("my_form"):
                 ],
             )
     with col3:
-        imprelig = st.slider("Es-ce important pour vous d'être de la même religion ?", 1, 10, 1)
-    with col4:
-        imprace = st.slider("Es-ce important pour vous d'être de la même race ?", 1, 10, 1)
+        attractivite = st.slider("Es-ce important pour vous l'attractivité envers cette personne ?", 1, 10, 1)
+        fun = st.slider("Es-ce important pour vous que cette personne soit fun ?", 1, 10, 1)
     submitted = st.form_submit_button("Submit")
     if submitted:
-        data_dict = {"age":[age], "race":[race], "samerace":[samerace], "career_c":[career], "imprelig":[imprelig], "imprace":[imprace], "gender":[genre]}
+        data_dict = {"age":[age], "fun":[fun], "samerace":[samerace], "career_c":[career], "attr":[attractivite], "gender":[genre]}
         data_to_pred = pd.DataFrame(data_dict)
         st.write(data_to_pred)
         data_to_pred_encoded = feature_encoder.transform(data_to_pred)
