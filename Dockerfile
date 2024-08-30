@@ -2,7 +2,7 @@
 
 FROM python:3.9-slim
 
-WORKDIR /home/pi/streamlit
+WORKDIR /home/noe/streamlit
 
 
 RUN apt-get update && apt-get install -y \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/Olivier77260/Projet_Tinder.git /var/www/html/streamlit/app
+RUN git clone https://github.com/Olivier77260/Projet_Tinder.git .
 
 RUN pip3 install -r requirements.txt
 
