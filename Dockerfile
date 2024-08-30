@@ -2,7 +2,7 @@
 
 FROM python:3.9-slim
 
-WORKDIR /var/www/html/streamlit
+WORKDIR /home/pi/streamlit
 
 
 RUN apt-get update && apt-get install -y \
