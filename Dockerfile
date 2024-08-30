@@ -2,7 +2,7 @@
 
 FROM python:3.9-slim
 
-WORKDIR /var/www/html/tinder
+WORKDIR Z:\app
 
 
 RUN apt-get update && apt-get install -y \
