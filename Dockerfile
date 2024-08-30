@@ -2,7 +2,7 @@
 
 FROM python:3.9-slim
 
-WORKDIR Z:\app
+WORKDIR /Users/NewNoe
 
 
 RUN apt-get update && apt-get install -y \
