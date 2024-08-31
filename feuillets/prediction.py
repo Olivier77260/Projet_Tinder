@@ -3,9 +3,8 @@ import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, f1_score
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -51,23 +50,21 @@ def ProfilSociaux(x):
     else:
         size = "Other"
     return size
+with st.spinner('Veuillez patienter... Préparation des données...'):
+    df.career_c = df.career_c.map(ProfilSociaux)
+    list_carrer = df['career_c'].value_counts().reset_index()
+    derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
+    df = derived_df.dropna()
 
-df.career_c = df.career_c.map(ProfilSociaux)
-list_carrer = df['career_c'].value_counts().reset_index()
-derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
-df = derived_df.dropna()
-with st.spinner('Please wait...'):
     features_list = ['age', 'fun', 'samerace', 'career_c', 'attr', 'gender' ]
 
     X = df.loc[:,features_list]
     y = df.loc[:,"dec"]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                                        test_size=0.2, 
-                                                        random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
     X_test = X_test.reset_index().drop(columns=["index"])
-    X_test_age = X_test[X_test["attr"]==10]
+    X_test_age = X_test[X_test["attr"]==8]
     X_test_age.index.tolist()
 
     numeric_features = ['age', 'fun', 'samerace', 'attr', 'gender' ] # Choose which column index we are going to scale
@@ -91,12 +88,15 @@ with st.spinner('Please wait...'):
     X_test2 = feature_encoder.transform(X_test)
     y_test_pred = regressor.predict(X_test2)
     mse = mean_squared_error(y_test, y_test_pred)
+    f1_score_tinder = f1_score(y_train, y_train_pred)
 
 st.success("Performance du modéle", icon="🚨")
 st.write("R2 score on training set : ", regressor.score(X_train, y_train))
 st.write("R2 score on test set : ", regressor.score(X_test2, y_test))
 st.success("Erreur quadratique moyenne", icon="🚨")
 st.write("MSE est de :", mse)
+st.success("Moy. harmonique de la précision et du rappel", icon="🚨")
+st.write("F1 score : ", f1_score_tinder)
 
 # formulaire pour notre prédiction
 with st.form("my_form"):
@@ -138,6 +138,6 @@ with st.form("my_form"):
         data_to_pred_encoded = feature_encoder.transform(data_to_pred)
         pred = regressor.predict(data_to_pred_encoded)
         if pred[0] == 0:
-            st.write("Les posibilités d'obtenir un rendez-vous sont faible")
+            st.write("Les posibilités d'obtenir un rendez-vous sont faibles")
         else:
-            st.write("Les posibilités d'obtenir un rendez-vous sont important")
+            st.write("Les posibilités d'obtenir un rendez-vous sont importants")
