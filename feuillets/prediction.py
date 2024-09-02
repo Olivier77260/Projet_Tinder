@@ -51,7 +51,7 @@ def ProfilSociaux(x):
         size = "Other"
     return size
 
-@st.cache_data
+@st.cache_resource
 def modele(df):
     features_list = ['age', 'fun', 'samerace', 'career_c', 'attr', 'gender' ]
 
@@ -134,9 +134,9 @@ with st.form("my_form"):
         data_to_pred_encoded = mod_reg_logistique[6].transform(data_to_pred)
         pred = mod_reg_logistique[4].predict(data_to_pred_encoded)
         if pred[0] == 0:
-            st.write("Les posibilités d'obtenir un rendez-vous sont faibles")
+            st.write("Les posibilités d'obtenir un rendez-vous sont faibles :umbrella_with_rain_drops:")
         else:
-            st.write("Les posibilités d'obtenir un rendez-vous sont importantes")
+            st.success("Les posibilités d'obtenir un rendez-vous sont importantes", icon="🔥")
 
 mse = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
 R2_train = mod_reg_logistique[4].score(mod_reg_logistique[0], mod_reg_logistique[1])
