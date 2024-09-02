@@ -3,9 +3,8 @@ import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, f1_score
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -59,12 +58,10 @@ def modele(df):
     X = df.loc[:,features_list]
     y = df.loc[:,"dec"]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                                        test_size=0.2, 
-                                                        random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
     X_test = X_test.reset_index().drop(columns=["index"])
-    X_test_age = X_test[X_test["attr"]==10]
+    X_test_age = X_test[X_test["attr"]==8]
     X_test_age.index.tolist()
 
     numeric_features = ['age', 'fun', 'samerace', 'attr', 'gender' ] # Choose which column index we are going to scale
@@ -137,7 +134,7 @@ with st.form("my_form"):
         data_to_pred_encoded = mod_reg_logistique[6].transform(data_to_pred)
         pred = mod_reg_logistique[4].predict(data_to_pred_encoded)
         if pred[0] == 0:
-            st.write("Les posibilités d'obtenir un rendez-vous sont faible")
+            st.write("Les posibilités d'obtenir un rendez-vous sont faibles")
         else:
             st.write("Les posibilités d'obtenir un rendez-vous sont important")
 
