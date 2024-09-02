@@ -136,13 +136,12 @@ with st.form("my_form"):
         if pred[0] == 0:
             st.write("Les posibilités d'obtenir un rendez-vous sont faibles")
         else:
-            st.write("Les posibilités d'obtenir un rendez-vous sont important")
+            st.write("Les posibilités d'obtenir un rendez-vous sont importantes")
 
 mse = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
 R2_train = mod_reg_logistique[4].score(mod_reg_logistique[0], mod_reg_logistique[1])
 R2_test = mod_reg_logistique[4].score(mod_reg_logistique[2], mod_reg_logistique[3])
 
-st.divider()
 expander = st.expander("considérations :", icon="🚨")
 expander.write("R2 score on training set : " + str(R2_train))
 expander.write("R2 score on test set : " + str(R2_test))
