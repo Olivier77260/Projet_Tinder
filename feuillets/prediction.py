@@ -52,11 +52,8 @@ def ProfilSociaux(x):
         size = "Other"
     return size
 
-df.career_c = df.career_c.map(ProfilSociaux)
-list_carrer = df['career_c'].value_counts().reset_index()
-derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
-df = derived_df.dropna()
-with st.spinner('Please wait...'):
+@st.cache_data
+def modele(df):
     features_list = ['age', 'fun', 'samerace', 'career_c', 'attr', 'gender' ]
 
     X = df.loc[:,features_list]
@@ -90,13 +87,15 @@ with st.spinner('Please wait...'):
     y_train_pred = regressor.predict(X_train)
     X_test2 = feature_encoder.transform(X_test)
     y_test_pred = regressor.predict(X_test2)
-    mse = mean_squared_error(y_test, y_test_pred)
 
-st.success("Performance du modéle", icon="🚨")
-st.write("R2 score on training set : ", regressor.score(X_train, y_train))
-st.write("R2 score on test set : ", regressor.score(X_test2, y_test))
-st.success("Erreur quadratique moyenne", icon="🚨")
-st.write("MSE est de :", mse)
+    return X_train, y_train, X_test2, y_test, regressor, y_test_pred, feature_encoder
+
+with st.spinner('Veuillez patienter... Chargement du modéle...'):
+    df.career_c = df.career_c.map(ProfilSociaux)
+    list_carrer = df['career_c'].value_counts().reset_index()
+    derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
+    df = derived_df.dropna()
+    mod_reg_logistique = modele(df)
 
 # formulaire pour notre prédiction
 with st.form("my_form"):
@@ -135,9 +134,19 @@ with st.form("my_form"):
         data_dict = {"age":[age], "fun":[fun], "samerace":[samerace], "career_c":[career], "attr":[attractivite], "gender":[genre]}
         data_to_pred = pd.DataFrame(data_dict)
         st.write(data_to_pred)
-        data_to_pred_encoded = feature_encoder.transform(data_to_pred)
-        pred = regressor.predict(data_to_pred_encoded)
+        data_to_pred_encoded = mod_reg_logistique[6].transform(data_to_pred)
+        pred = mod_reg_logistique[4].predict(data_to_pred_encoded)
         if pred[0] == 0:
             st.write("Les posibilités d'obtenir un rendez-vous sont faible")
         else:
             st.write("Les posibilités d'obtenir un rendez-vous sont important")
+
+mse = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
+R2_train = mod_reg_logistique[4].score(mod_reg_logistique[0], mod_reg_logistique[1])
+R2_test = mod_reg_logistique[4].score(mod_reg_logistique[2], mod_reg_logistique[3])
+
+st.divider()
+expander = st.expander("considérations :", icon="🚨")
+expander.write("R2 score on training set : " + str(R2_train))
+expander.write("R2 score on test set : " + str(R2_test))
+expander.write("MSE est de : " + str(mse))
