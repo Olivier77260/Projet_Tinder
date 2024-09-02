@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error, f1_score
+from sklearn.metrics import mean_squared_error, f1_score, accuracy_score, recall_score, roc_auc_score
 from sklearn.linear_model import LogisticRegression
 import os
 
@@ -80,13 +80,16 @@ def modele(df):
         )
 
     X_train = feature_encoder.fit_transform(X_train)
-    regressor = LogisticRegression()
+    param_grid = {'C' : [0.01], 'solver' : ['saga']}
+    # Initialiser le modèle de recherche de grille 
+    regressor = GridSearchCV(LogisticRegression(), param_grid, cv=5) 
+    # regressor = LogisticRegression()
     regressor.fit(X_train, y_train)
-    # y_train_pred = regressor.predict(X_train)
+    y_train_pred = regressor.predict(X_train)
     X_test2 = feature_encoder.transform(X_test)
     y_test_pred = regressor.predict(X_test2)
 
-    return X_train, y_train, X_test2, y_test, regressor, y_test_pred, feature_encoder
+    return X_train, y_train, X_test2, y_test, regressor, y_test_pred, feature_encoder, y_train_pred
 
 @st.cache_data(persist=True)
 def prepa_donnees(df):
@@ -142,11 +145,29 @@ with st.form("my_form"):
         else:
             st.success("Les posibilités d'obtenir un rendez-vous sont importantes", icon="🔥")
 
-mse = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
+mse_test = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
+mse_train = mean_squared_error(mod_reg_logistique[1], mod_reg_logistique[7])
+
 R2_train = mod_reg_logistique[4].score(mod_reg_logistique[0], mod_reg_logistique[1])
 R2_test = mod_reg_logistique[4].score(mod_reg_logistique[2], mod_reg_logistique[3])
 
+train_accurancy = accuracy_score(mod_reg_logistique[1], mod_reg_logistique[7])
+test_accurancy = accuracy_score(mod_reg_logistique[3], mod_reg_logistique[5])
+
+train_recall = recall_score(mod_reg_logistique[1], mod_reg_logistique[7])
+test_recall = recall_score(mod_reg_logistique[3], mod_reg_logistique[5])
+
+train_auc = roc_auc_score(mod_reg_logistique[1], mod_reg_logistique[7])
+test_auc = roc_auc_score(mod_reg_logistique[3], mod_reg_logistique[5])
+
+f1_score_train = f1_score(mod_reg_logistique[1], mod_reg_logistique[7])
+f1_score_test = f1_score(mod_reg_logistique[3], mod_reg_logistique[5])
+
+performance_table = pd.DataFrame({
+        'Métrique': ['Accuracy', 'R2', 'Recall', 'MSE', 'ROC AUC', 'F1_score'],
+        'Ensemble d\'entrainement': [train_accurancy, R2_train, train_recall, mse_train, train_auc, f1_score_train],
+        'Ensemble de test': [test_accurancy, R2_test, test_recall, mse_test, test_auc, f1_score_test]
+})
+
 expander = st.expander("considérations :", icon="🚨")
-expander.write("R2 score on training set : " + str(R2_train))
-expander.write("R2 score on test set : " + str(R2_test))
-expander.write("MSE est de : " + str(mse))
+expander.dataframe(performance_table)
