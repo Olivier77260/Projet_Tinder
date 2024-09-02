@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_squared_error, f1_score
 from sklearn.linear_model import LogisticRegression
+import os
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -51,7 +52,7 @@ def ProfilSociaux(x):
         size = "Other"
     return size
 
-@st.cache_resource
+@st.cache_data
 def modele(df):
     features_list = ['age', 'fun', 'samerace', 'career_c', 'attr', 'gender' ]
 
@@ -81,19 +82,22 @@ def modele(df):
     X_train = feature_encoder.fit_transform(X_train)
     regressor = LogisticRegression()
     regressor.fit(X_train, y_train)
-    y_train_pred = regressor.predict(X_train)
+    # y_train_pred = regressor.predict(X_train)
     X_test2 = feature_encoder.transform(X_test)
     y_test_pred = regressor.predict(X_test2)
 
     return X_train, y_train, X_test2, y_test, regressor, y_test_pred, feature_encoder
 
-with st.spinner('Veuillez patienter... Chargement du modéle...'):
-    df.career_c = df.career_c.map(ProfilSociaux)
-    list_carrer = df['career_c'].value_counts().reset_index()
-    derived_df = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
-    df = derived_df.dropna()
-    mod_reg_logistique = modele(df)
+@st.cache_data(persist=True)
+def prepa_donnees(df):
+    df_model = df[['age', 'fun', 'samerace', 'career_c', 'attr', 'gender', 'dec' ]]
+    df_model = df_model.dropna()
+    df_model.career_c = df_model.career_c.map(ProfilSociaux)   
+    return df_model
 
+df_modele = prepa_donnees(df)
+mod_reg_logistique = modele(df_modele)
+list_carrer = df_modele['career_c'].value_counts().reset_index()
 # formulaire pour notre prédiction
 with st.form("my_form"):
     st.write("Renseigner les élements ci-dessous")
