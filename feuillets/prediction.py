@@ -3,9 +3,10 @@ import streamlit as st
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error, f1_score, accuracy_score, recall_score, roc_auc_score
+from sklearn.metrics import mean_squared_error, f1_score, accuracy_score, recall_score, roc_auc_score, precision_score, confusion_matrix
 from sklearn.linear_model import LogisticRegression
-import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 if st.session_state.del_from:
     df = st.session_state.dfTrue
@@ -148,9 +149,6 @@ with st.form("my_form"):
 mse_test = mean_squared_error(mod_reg_logistique[3], mod_reg_logistique[5])
 mse_train = mean_squared_error(mod_reg_logistique[1], mod_reg_logistique[7])
 
-R2_train = mod_reg_logistique[4].score(mod_reg_logistique[0], mod_reg_logistique[1])
-R2_test = mod_reg_logistique[4].score(mod_reg_logistique[2], mod_reg_logistique[3])
-
 train_accurancy = accuracy_score(mod_reg_logistique[1], mod_reg_logistique[7])
 test_accurancy = accuracy_score(mod_reg_logistique[3], mod_reg_logistique[5])
 
@@ -163,11 +161,25 @@ test_auc = roc_auc_score(mod_reg_logistique[3], mod_reg_logistique[5])
 f1_score_train = f1_score(mod_reg_logistique[1], mod_reg_logistique[7])
 f1_score_test = f1_score(mod_reg_logistique[3], mod_reg_logistique[5])
 
+precision_train = precision_score(mod_reg_logistique[1], mod_reg_logistique[7])
+precision_test = precision_score(mod_reg_logistique[3], mod_reg_logistique[5])
+
+
+cm = confusion_matrix(mod_reg_logistique[1], mod_reg_logistique[7])
+plt.figure(figsize=(4, 3), dpi=40)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
+            xticklabels=['Prédiction Négative', 'Prédiction Positive'],
+            yticklabels=['Classe Négative', 'Classe Positive'])
+plt.title('Matrice de Confusion')
+plt.xlabel('Prédictions')
+plt.ylabel('Valeurs Réelles')
+
 performance_table = pd.DataFrame({
-        'Métrique': ['Accuracy', 'R2', 'Recall', 'MSE', 'ROC AUC', 'F1_score'],
-        'Ensemble d\'entrainement': [train_accurancy, R2_train, train_recall, mse_train, train_auc, f1_score_train],
-        'Ensemble de test': [test_accurancy, R2_test, test_recall, mse_test, test_auc, f1_score_test]
+        'Métrique': ['Accuracy', 'Précision', 'Recall', 'F1_score', 'ROC AUC', 'MSE'],
+        'Ensemble d\'entrainement': [train_accurancy, precision_train, train_recall, f1_score_train, train_auc, mse_train],
+        'Ensemble de test': [test_accurancy, precision_test, test_recall, f1_score_test, test_auc, mse_test]
 })
 
 expander = st.expander("considérations :", icon="🚨")
 expander.dataframe(performance_table)
+expander.pyplot(plt, use_container_width=False)
