@@ -54,11 +54,11 @@ with tab3:
         st.dataframe(in_null, width=200)
     with col6:
         st.write("Exemple de valeurs max non conforme dans la wave 6")
-        exemple1 = df.groupby(['gender', (df.wave == 6)]).agg({'pf_o_att':'max','pf_o_sin':'max','pf_o_int':'max','pf_o_fun':'max','pf_o_amb':'max','pf_o_sha':'max'}).reset_index()
+        exemple1 = df.groupby(['gender', (df.wave == 6)]).agg({'attr1_1':'max','sinc1_1':'max','intel1_1':'max','fun1_1':'max','amb1_1':'max','shar1_1':'max'}).reset_index()
         exemple1 = exemple1[exemple1.wave == True]
         st.dataframe(exemple1)
         st.write("Exemple de valeurs max non conforme dans la wave 7")
-        exemple2 = df.groupby(['gender', (df.wave == 7)]).agg({'pf_o_att':'max','pf_o_sin':'max','pf_o_int':'max','pf_o_fun':'max','pf_o_amb':'max','pf_o_sha':'max'}).reset_index()
+        exemple2 = df.groupby(['gender', (df.wave == 7)]).agg({'attr2_1':'max','sinc2_1':'max','intel2_1':'max','fun2_1':'max','amb2_1':'max','shar2_1':'max'}).reset_index()
         exemple2 = exemple2[exemple2.wave == True]
         st.dataframe(exemple2)
 
