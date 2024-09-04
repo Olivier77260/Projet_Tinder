@@ -20,7 +20,7 @@ def Objects(x):
     elif x == 5.0:
         size = "Dire que je l'ai fait !!!"
     else:
-        size = "Autre"
+        size = "Autres"
     return size
 
 @st.cache_data
@@ -50,9 +50,9 @@ st.markdown("## <font color='tomato'><ins>**ATTENTES DES PARTICIPANTS**</ins></f
 tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Objectifs***]", "##### :blue[***2. Les qualités recherchées***]", "##### :blue[***3. Leurs espoirs***]"])
 
 with tab1:    
-    tab1.subheader("Principal objectif de participer à cet événement")
-    age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente1", value=25,)      
-    st.write("L'age selectionné est ", age, "ans")
+    tab1.subheader("Pourquoi participer à cet évènement ?")
+    age = st.select_slider("Sélectionner l'âge",options=list_age(df), key="attente1", value=25,)      
+    st.write("L'âge sélectionné est ", age, "ans")
     objectifs = df2.groupby(['goal', (df2.age == age)], dropna=True)['gender'].value_counts().reset_index()
     objectifs = objectifs[objectifs.age == True]
     objectifs['gender'] = objectifs['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
@@ -114,9 +114,9 @@ with tab1:
 
 with tab2:
     tab2.subheader("Qualités recherchées chez le sexe opposé.")
-    age = st.select_slider("Selectionner l'age",options=list_age(df), key="attente2", value=25,)
+    age = st.select_slider("Sélectionner l'âge",options=list_age(df), key="attente2", value=25,)
     # qualité noteé dans les waves de 1 à 5 et de 10 à 21, les waves 6 à 9 sont non conformes à la notation demandée.
-    st.write("L'age selectionné est ", age, "ans")
+    st.write("L'âge sélectionné est ", age, "ans")
     wave1a5_10a21 = df2[(df2['wave'] <= 5) | (df2['wave'] >=10)]
     wave1a5_10a21 = wave1a5_10a21.fillna(0)
     list_search = wave1a5_10a21.groupby(['gender', (wave1a5_10a21.age == age)]).aggregate({'attr1_1':'mean','shar1_1':'mean','sinc1_1':'mean','intel1_1':'mean','fun1_1':'mean','amb1_1':'mean'}).reset_index()
@@ -183,7 +183,7 @@ with tab3:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Les attentes des participants sont surtout de passer une agréable soirée. "
+    "L'attente des participants est surtout de passer une agréable soirée. "
     "Les hommes sont plus confiants que les femmes quant à trouver le bonheur après cette soirée. ",)
 st.divider()
 expander = st.expander("considérations :")

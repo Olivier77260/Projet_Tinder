@@ -20,15 +20,15 @@ def pref_positive(df, age, decision):
 
 st.markdown("## <font color='tomato'><ins>**SPEED DATING**</ins></font>", unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["##### :blue[***1. Qualités recherchées***]", "##### :blue[***2. qualités attribuées par hommes***]", "##### :blue[***3. qualités attribuées par les femmes***]", "##### :blue[***4. Sondage***]",])
+tab1, tab2, tab3, tab4 = st.tabs(["##### :blue[***1. Qualités recherchées***]", "##### :blue[***2. qualités attribuées par les hommes***]", "##### :blue[***3. qualités attribuées par les femmes***]", "##### :blue[***4. Sondage***]",])
 
 # affichage qualités
 with tab1:
     st.subheader("Qualités recherchées chez le sexe opposé lors de ce speed dating.")
     # qualité noteé dans les waves de 1 à 5 et de 10 à 21, les waves 6 à 9 sont non conformes à la notation demandée.
     # slider de selection de l'age
-    age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad1", value=25)
-    st.write("L'age selectionné est ", age, "ans")
+    age = st.select_slider("Sélectionner l'âge", options=list_age(df), key="attribution_bad1", value=25)
+    st.write("L'âge sélectionné est ", age, "ans")
     wave1a5_10a21 = df2[(df2['wave'] <= 5) | (df2['wave'] >=10)]
     wave1a5_10a21 = wave1a5_10a21.fillna(df.mean(numeric_only=True))
     list_search = wave1a5_10a21.groupby(['gender', (wave1a5_10a21.age == age)]).aggregate({'attr2_1':'mean','shar2_1':'mean','sinc2_1':'mean','intel2_1':'mean','fun2_1':'mean','amb2_1':'mean'}).reset_index()
@@ -85,11 +85,11 @@ with tab1:
 with tab2:
     st.subheader("Attribution des qualités par les hommes suite au speed dating.")
     # slider de selection de l'age
-    age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad2", value=25)
+    age = st.select_slider("Sélectionner l'âge", options=list_age(df), key="attribution_bad2", value=25)
     research_bad = pref_positive(df, age, 0)
     research_good = pref_positive(df, age, 1)
     # qualités attibuées sans suite de rdv
-    st.write("L'age selectionné est ", age, "ans")
+    st.write("L'âge sélectionné est ", age, "ans")
     col3, col4 = st.columns(2, gap='medium')
     with col3:
          # Attribution des qualités par les hommes        
@@ -108,7 +108,7 @@ with tab2:
             for i in range(len(list_search_bad_male)-1):
                 explode.append(0)            
             fig1, ax1 = plt.subplots()
-            st.subheader("Envers les femmes sans suite de rendez-vous")
+            st.subheader("Envers les femmes sans suite de second rendez-vous")
             ax1.pie(list_search_bad_male, explode=explode, labels=list_search_bad_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax1.axis('equal')
             st.pyplot(fig1, clear_figure=True)
@@ -132,7 +132,7 @@ with tab2:
                 explode.append(0)
             explode.append(0.1)            
             fig5, ax5 = plt.subplots()
-            st.subheader("Envers les femmes avec rendez-vous")
+            st.subheader("Envers les femmes avec second rendez-vous")
             ax5.pie(list_search_good_male, explode=explode, labels=list_search_good_male_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax5.axis('equal')
             st.pyplot(fig5, clear_figure=True)
@@ -143,10 +143,10 @@ with tab2:
 with tab3:
     st.subheader("Attribution des qualités par les femmes suite au speed dating.")
     # slider de selection de l'age
-    age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad3", value=25)
+    age = st.select_slider("Sélectionner l'âge", options=list_age(df), key="attribution_bad3", value=25)
     research_bad_f = pref_positive(df, age, 0)
     research_good_f = pref_positive(df, age, 1)
-    st.write("L'age selectionné est ", age, "ans")
+    st.write("L'âge sélectionné est ", age, "ans")
     col5, col6 = st.columns(2, gap='medium')
     with col5:
         # Attribution des qualités par les femmes sans rendez-vous
@@ -165,7 +165,7 @@ with tab3:
             for i in range(len(list_search_female)-1):
                 explode.append(0)            
             fig6, ax6 = plt.subplots()
-            st.subheader("Envers les hommes sans suite de rendez-vous")
+            st.subheader("Envers les hommes sans suite de second rendez-vous")
             ax6.pie(list_search_female, explode=explode, labels=list_search_female_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
             ax6.axis('equal')
             st.pyplot(fig6, clear_figure=True)            
@@ -187,7 +187,7 @@ with tab3:
                     explode.append(0)
                 explode.append(0.1)          
                 fig2, ax2 = plt.subplots()
-                st.subheader("Envers les hommes avec rendez-vous")
+                st.subheader("Envers les hommes avec second rendez-vous")
                 ax2.pie(list_search_female_good, explode=explode, labels=list_search_female_good_label,  autopct='%0.0f%%', shadow=True, startangle=90, pctdistance=0.7)
                 ax2.axis('equal')
                 st.pyplot(fig2, clear_figure=True)
@@ -250,10 +250,10 @@ with tab4:
 txt = st.text_area(
     "#### **Interprétation :**",
     "Les qualités recherchées, en majorité par les hommes et les femmes avant les rendez-vous, sont l'attractivité. "
-    "A l'issu de ces speed dating les qualités attribuées, que ce soit par les femmes ou les hommes, deviennent beaucoup plus équilibrées. "
-    "On voit que rien ne permet clairement d'identifier pourquoi une suite est donnée avec un rendez-vous. "
-    "L'indice de satisfaction des personnes rencontrées obtient à peine la moyenne, ce qui veut dire que les matchs proposés ne sont pas adéquates. "
-    "Le temps de 4 minutes du speed dating en est peut-être la raison car trop court."
+    "A l'issue de ces speed dating, les qualités attribuées, que ce soit par les femmes ou les hommes, deviennent beaucoup plus équilibrées. "
+    "On constate que rien ne permet clairement d'identifier pourquoi une suite est donnée à un premier rendez-vous. "
+    "L'indice de satisfaction des personnes rencontrées obtient à peine la moyenne, ce qui pourrait impliquer que les matchs proposés ne sont pas assez pertinents. "
+    "Le temps de 4 minutes du speed dating en est peut-être la raison car trop court pour découvrir la personne."
     ,)
 st.divider()
 expander = st.expander("considérations :")

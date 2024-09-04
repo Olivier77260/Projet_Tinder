@@ -15,7 +15,7 @@ def main():
 
     with st.sidebar:
         manque = st.radio(
-        "Suppression des valeurs abérantes",
+        "Suppression des valeurs aberrantes",
         ["Non", "Oui"],
         horizontal=True,
         )
@@ -42,7 +42,7 @@ def main():
     attentes = st.Page("feuillets/attentes.py", title="1 - Attentes", icon="🕔️")
     speed_dating = st.Page("feuillets/speed_dating.py", title="2 - Speed Dating", icon="🎈")
     bilan = st.Page("feuillets/bilan.py", title="3 - Bilan du speed dating", icon="💅")
-    second_rdv = st.Page("feuillets/second_rdv.py", title="4 - Deuxiéme rendez-vous", icon="❤️")
+    second_rdv = st.Page("feuillets/second_rdv.py", title="4 - Deuxième rendez-vous", icon="❤️")
 
     conclusion = st.Page("feuillets/conclusion.py", title="- Conclusion", icon="✒️")
     prediction = st.Page("feuillets/prediction.py", title="- Prédictions", icon="🎲")

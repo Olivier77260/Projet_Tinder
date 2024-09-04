@@ -30,7 +30,7 @@ adresses = pd.read_csv('adresses.csv', sep=';')
 
 st.markdown("## <font color='tomato'><ins>**PROFIL PHYSIQUE**</ins></font>", unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Graphique des âges***]", "##### :blue[***2. Type de races***]", "##### :blue[***3. Région du monde***]"])
+tab1, tab2, tab3 = st.tabs(["##### :blue[***1. Graphique des âges***]", "##### :blue[***2. Type de races***]", "##### :blue[***3. Régions du monde***]"])
 
 #affichage des ages
 with tab1:
@@ -79,12 +79,12 @@ with tab2:
 
 # carte du monde
 with tab3:
-    st.subheader("Carte du monde d'où viennet les participants.")
+    st.subheader("Carte du monde d'où viennent les participants.")
     st.map(adresses, latitude='latitude', longitude='longitude', zoom=1.5, color='#f20202', size='total')
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Dans cette étude la mixité homme/femme est de 50/50, avec une majorité de femme avant la trentaine. "
+    "Dans cette étude, la mixité homme/femme est de 50/50, avec une majorité de femmes avant la trentaine. "
     "On remarque aussi que nous avons à peine une cinquantaine de personnes en moyenne par tranche d'âge. "
     "La race majoritairement représentée est de type European/Caucasian-American suivie par le type Asian/Pacific Islander/Asian-American. "
-    "L'opération de speed dating a eu lieu dans Beaucoup de pays dans le monde.",)
+    "L'opération de speed dating a eu lieu principalement aux Etats-Unis suivi de l'Europe.",)

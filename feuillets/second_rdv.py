@@ -34,9 +34,9 @@ with tab2:
     expander3.metric(value=df['samerace'][df.gender == 0][df.date_3 == 1].isnull().sum(), label="Pour les femmes.")
 
 with tab3:    
-    st.subheader("Aprés le rendez-vous, il a été demandé de repenser leurs décisions par rapport au speed dating.")
-    age = st.select_slider("Selectionner l'age", options=list_age(df), key="attribution_bad", value=25)
-    st.write("L'age selectionné est ", age, "ans")
+    st.subheader("Après le rendez-vous, il a été demandé de repenser leurs décisions par rapport au speed dating.")
+    age = st.select_slider("Sélectionner l'âge", options=list_age(df), key="attribution_bad", value=25)
+    st.write("L'âge sélectionné est ", age, "ans")
     list_search = df.fillna(df.mean(numeric_only=True))
     list_search = list_search.groupby(['gender', (df.age == age), (df.date_3 == 1)], dropna=True).aggregate({'attr7_3':'mean','shar7_3':'mean','sinc7_3':'mean','intel7_3':'mean','fun7_3':'mean','amb7_3':'mean'}).reset_index()
     list_search = list_search[list_search.age == True]
@@ -103,11 +103,11 @@ with tab3:
 col1, col2, col3, col4 = st.columns(4, gap="medium")
 
 with col1:
-    st.metric(value=nb_rdv, label="Nombre total de match suite au speed dating")
+    st.metric(value=nb_rdv, label="Nombre total de matchs suite au speed dating")
 
 with col2:        
     total_rdv = df['num_in_3'][df.date_3 == 1].sum()
-    st.metric(value=total_rdv, label="Nombre total de rendez-vous réellement obtenu")
+    st.metric(value=total_rdv, label="Nombre total de rendez-vous réellement obtenus")
 
 with col3:
     pourcentage = np.round(total_rdv * 100 / nb_rdv, 2)
@@ -120,11 +120,10 @@ with col4:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Suite au nombre de personnes qui ont matché ensemble lors du speed dating, le nombre de rendez-vous obtenu aprés chute encore légérement . "
+    "Suite au nombre de personnes qui ont matché lors du speed dating, le nombre de second rendez-vous obtenu chute légèrement. "
     "Nous avons en moyenne à peine un rendez-vous par personne, malgré une bonne correspondance dans les qualités recherchées. "
-    "L'importance de la race dans une relation se retrouve bien ici dans les rendez-vous obtenus. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)
 
 st.divider()
 expander = st.expander("considérations :")
-expander.write("Les valeurs manquantes ont été remplacées par la moyenne des valeurs.") 
+expander.write("Les valeurs manquantes ont été remplacées par la moyenne des valeurs.")

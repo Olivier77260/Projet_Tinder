@@ -16,14 +16,14 @@ df3 = load_data_rdv(df)
 result = match(df)
 
 with tab1:
-    st.subheader("Nombre de match obtenu en fonction de l'âge.")  
+    st.subheader("Nombre de matchs obtenus en fonction de l'âge.")  
     st.bar_chart(df3, x="age", y="match", color='gender', stack=False, use_container_width=True)
     expander2 = st.expander("Valeurs manquantes :")
     expander2.metric(value=df['match'][df.gender == 1].isnull().sum(), label="Pour les hommes.")
     expander2.metric(value=df['match'][df.gender == 0].isnull().sum(), label="Pour les femmes.")
     
 with tab2:
-    st.subheader("Nombre de match obtenu suivant la race.")  
+    st.subheader("Nombre de matchs obtenus suivant la race.")  
     df2 = df.groupby(['age', (df.match == 1), 'gender'])['samerace'].value_counts().reset_index()
     df2['gender'] = df2['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
     df2['samerace'] = df2['samerace'].apply(lambda x: 'Non' if x == 0 else 'Oui')
@@ -107,7 +107,7 @@ with col1:
     st.metric(value=Nb_total_rencontre, label="Nombre total de rencontres lors du speed dating")
 
 with col2:
-    st.metric(value=result, label="Nombre total de match obtenu")
+    st.metric(value=result, label="Nombre total de matchs obtenus")
     expander = st.expander("considérations :")
     expander.write("Il faut que les 2 participants aient décidé de se revoir pour comptabiliser un match.")
 
@@ -118,7 +118,7 @@ with col3:
 with col4:
     participant = nb_participant(df)
     pourcentage2 = np.round(result / participant, 2)
-    st.metric(value=pourcentage2, label="Nombre de match par participant")
+    st.metric(value=pourcentage2, label="Nombre de matchs par participant")
 
 with col5:
     diff = df.groupby([(df.gender == 1), (df.match == 1), 'idg', 'wave'])["diff_age"].mean().reset_index(name="Moy")
@@ -128,10 +128,10 @@ with col5:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Le nombre de match obtenu suite au speed dating est très faible. "
-    "L'écart moyen entre l'âge des hommes et des femmes n'est pas un critére significatif. "
+    "Le nombre de matchs obtenus suite au speed dating est très faible. "
+    "L'écart moyen entre l'âge des hommes et des femmes n'est pas un critère significatif. "
     "Nous avons en moyenne un peu plus d'un match par personne, malgré une bonne correspondance dans les qualités recherchées. "
-    "Contrairement aux habitudes des gens, on voit qu'il y a eu pas mal de match entre des gens de races différentes. "
+    "On voit qu'il y a eu pas mal de match entre des gens de races différentes. "
     "La réévaluation de l'importance des qualités recherchées montre un changement de tendance vers l'attractivité. ",)
 
 st.divider()

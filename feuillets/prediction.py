@@ -105,7 +105,7 @@ list_carrer = df_modele['career_c'].value_counts().reset_index()
 # formulaire pour notre prédiction
 with st.form("my_form"):
     st.write("Renseigner les élements ci-dessous")
-    age = st.number_input("Votre age", min_value=18, max_value=55, format="%0.0f", step=1, placeholder="Type age...")
+    age = st.number_input("Votre âge", min_value=18, max_value=55, format="%0.0f", step=1, placeholder="Type age...")
     career = st.selectbox(
         "Sélectionner votre profession",
         (list_carrer.career_c),
@@ -124,7 +124,7 @@ with st.form("my_form"):
             )
     with col2:
         samerace = st.radio(
-                "Es-ce important pour vous d'être de la même race ?",
+                "Est-ce important pour vous d'être de la même race ?",
                 ["0", "1"],
                 captions=[
                     "Non",
@@ -132,8 +132,8 @@ with st.form("my_form"):
                 ],
             )
     with col3:
-        attractivite = st.slider("Es-ce important pour vous l'attractivité envers cette personne ?", 1, 10, 1)
-        fun = st.slider("Es-ce important pour vous que cette personne soit fun ?", 1, 10, 1)
+        attractivite = st.slider("Est-ce important pour vous l'attractivité envers cette personne ?", 1, 10, 1)
+        fun = st.slider("Est-ce important pour vous que cette personne soit fun ?", 1, 10, 1)
     submitted = st.form_submit_button("Submit")
     if submitted:
         data_dict = {"age":[age], "fun":[fun], "samerace":[samerace], "career_c":[career], "attr":[attractivite], "gender":[genre]}

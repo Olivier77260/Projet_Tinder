@@ -60,7 +60,7 @@ with tab1:
 # affichage race
 with tab2: 
     age_race = st.select_slider(
-    "Selectionner l'age",
+    "Sélectionner l'âge",
     options=list_age(df),
     key="race",
     value=25,
@@ -69,8 +69,8 @@ with tab2:
     race = race[race.age == True]
     race['gender'] = race['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
     race = race.drop(race[race.index==0].index)
-    st.write("L'age selectionné est ", age_race, "ans")
-    st.subheader("Importance interraciale dans une relation :")
+    st.write("L'âge sélectionné est ", age_race, "ans")
+    st.subheader("Importance inter-raciale dans une relation :")
     st.bar_chart(race, x="imprace", y="count", x_label="Importance de la race", stack=True, use_container_width=True, color="gender")
     expander1 = st.expander("Valeurs manquantes :")      
     expander1.metric(value=df2['imprace'][df2.gender == 0].isnull().sum(), label="Nombre de valeurs manquantes chez les femmes.")
@@ -79,7 +79,7 @@ with tab2:
 # affichage religion
 with tab3:  
     age_religion = st.select_slider(
-    "Selectionner l'age",
+    "Sélectionner l'âge",
     options=list_age(df),
     key="religion",
     value=25,
@@ -87,7 +87,7 @@ with tab3:
     religion = df2.groupby(["imprelig",(df2.age == age_religion)], as_index=False)["gender"].value_counts()
     religion = religion[religion.age == True]
     religion['gender'] = religion['gender'].apply(lambda x: 'Female' if x == 0 else 'Male')
-    st.write("L'age selectionné est ", age_religion, "ans")
+    st.write("L'âge sélectionné est ", age_religion, "ans")
     st.subheader("Importance de la religion dans une relation.")
     st.bar_chart(religion, x="imprelig", y="count", stack=True, use_container_width=True, color="gender", x_label="Importance de la religion")
     expander2 = st.expander("Valeurs manquantes :")      
@@ -96,9 +96,9 @@ with tab3:
 
 txt = st.text_area(
     "#### **Interprétation :**",
-    "Les participants sont en grandes majorité des personnes qui sortent assez souvent. "
+    "Les participants sont en grande majorité des personnes qui ont une vie sociale importante. "
     "Malgré tout, elles n'ont pas forcément un nombre de rendez-vous conséquents. "
-    "Globalement ces personnes n'attachent pas une grande importance au fait d'être de la même race et de la même religion dans une relation.",)
+    "Globalement ces personnes n'attachent pas une grande importance au fait d'être de la même race et/ou de la même religion dans une relation.",)
 st.divider()
 expander = st.expander("considérations :")
-expander.write("Noter sur une échelle de 1 à 10 l'importance qu'a pour vous de sortir avec une personne de même origine raciale ou religieuse dans une relation.")
+expander.write("Noter, sur une échelle de 1 à 10, l'importance pour vous d'avoir une relation avec une personne de même origine raciale ou religieuse.")
